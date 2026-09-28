@@ -11,6 +11,8 @@
 | 使用者操作（起卦、排盘、记录、导出） | [使用说明](使用说明_V2.2.md) |
 | 开发环境、模块结构、构建与测试 | [开发者指南](DEVELOPER_GUIDE_V2.2.0.md) |
 | 本地数据键名、V3 导入与备份口径 | [数据兼容与迁移](数据兼容与迁移.md) |
+| 历史归档（V2.1 / V2.2 审计资料） | [历史归档索引](../history/README.md) |
+| 跨版本数据兼容测试（144 用例） | [`test-compat-full.mjs`](../test-compat-full.mjs) |
 | 变更历史 | [CHANGELOG](../CHANGELOG.md) |
 | 安全报告 / 贡献边界 | [SECURITY](../SECURITY.md) / [CONTRIBUTING](../CONTRIBUTING.md) |
 

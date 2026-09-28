@@ -19,6 +19,7 @@ jobs:
       - run: npm ci
       - run: npm run check
       - run: npm run test:all
+      - run: node test-compat-full.mjs
       - run: npm run build
       - run: npm run build:protected
       - run: npm run test:protected

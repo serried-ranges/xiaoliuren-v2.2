@@ -46,6 +46,7 @@ npm run test:protected  # 验证受保护发布包（7 项检查）
 | [使用说明](docs/使用说明_V2.2.md) | 使用者操作（起卦、排盘、记录、导出） |
 | [开发者指南](docs/DEVELOPER_GUIDE_V2.2.0.md) | 环境、模块结构、构建与测试 |
 | [数据兼容与迁移](docs/数据兼容与迁移.md) | 本地键名、V3 导入、备份建议 |
+| [历史归档](history/README.md) | V2.1 / V2.2 历史版本与审计资料 |
 | [CHANGELOG](CHANGELOG.md) ｜ [SECURITY](SECURITY.md) ｜ [CONTRIBUTING](CONTRIBUTING.md) | 变更 / 安全 / 贡献 |
 
 ## 共同口径（三项目一致）

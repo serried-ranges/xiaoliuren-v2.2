@@ -2,6 +2,12 @@
 
 > 本仓库的独立变更日志，最新在上。迁仓前的历史见主项目 [`serried-ranges/xiaoliuren`](https://github.com/serried-ranges/xiaoliuren) 的 CHANGELOG 与 `历史记录/`。
 
+## [2026-09-28] — 接收 V2.x 历史归档与跨版本兼容测试
+
+- 从主项目 `历史记录/` 迁入 `history/V2.1/`（5 个文件：两个单 HTML 版本、农历库、本地服务器脚本、手工测试页）与 `history/V2.2/`（审计与路线图各 1 份），新增 [历史归档索引](history/README.md)；
+- 从主项目迁入 `test-compat-full.mjs`（V2.2 ↔ V3.0 导入导出兼容，144 用例），并加入独立 CI 步骤；
+- 文档索引同步（根 README、`docs/README.md`）。
+
 ## [2026-09-28] — 文档结构独立化与归档说明
 
 - 新增 `docs/` 文档目录：`README.md`（索引）、`归档说明.md`、`数据兼容与迁移.md`；

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>小六壬排盘V2.1.1 - 50组测试报告</title>
+<script src="lunar.js"></script>
+<style>
+  body { font-family: system-ui,"Microsoft YaHei",sans-serif; background:#fffdf9; color:#3d3226; margin:20px; line-height:1.6; }
+  h1 { color:#2c2416; border-bottom:2px solid #c8a84e; padding-bottom:8px; }
+  h2 { color:#2c2416; border-left:4px solid #c8a84e; padding-left:10px; margin-top:28px; }
+  .summary { background:#fff; border:1px solid #e0d4b8; border-radius:8px; padding:16px; margin:15px 0; }
+  .stat { display:inline-block; margin-right:24px; }
+  .pass { color:#2e7d32; font-weight:700; }
+  .fail { color:#c62828; font-weight:700; }
+  table { border-collapse:collapse; width:100%; background:#fff; font-size:11px; margin-top:10px; }
+  th,td { border:1px solid #e0d4b8; padding:5px 4px; text-align:center; word-break:break-all; }
+  th { background:#c8a84e; color:#fff; position:sticky; top:0; }
+  tr:nth-child(even) { background:#fffdf6; }
+  .ok { color:#2e7d32; }
+  .ng { color:#c62828; }
+  .tag { display:inline-block; padding:1px 5px; border-radius:3px; font-size:10px; }
+  .tag-j { background:#fff3cd; color:#856404; }
+  .tag-g { background:#d1ecf1; color:#0c5460; }
+  .note { background:#fff8e1; border-left:3px solid #c8a84e; padding:10px; margin:10px 0; font-size:13px; }
+</style>
+</head>
+<body>
+<h1>🧪 小六壬排盘正式版 V2.1.1 — 50组测试报告</h1>
+<div class="note">本测试独立复刻 V2.1.1 排盘算法（walk/getRemainder/getShiChen/generateJiangPai），农历采用 lunar-javascript 权威库，对 50 组数据交叉验证排盘准确性、江氏排盘结果、提示词完整性。</div>
+<div id="summary"></div>
+<div id="detail"></div>
+
+<script>
+// ===== 独立排盘实现（与 V2.1.1 完全一致）=====
+const SHEN_NAMES = ['大安','留连','速喜','赤口','小吉','空亡'];
+const SHEN_MEANING = {'大安':'平安吉祥，诸事顺利','留连':'事有拖延，需耐心等待','速喜':'喜事临门，快速达成','赤口':'口舌是非，谨慎行事','小吉':'小有吉利，渐进成功','空亡':'事多落空，需防损失'};
+const LIU_SHEN_NAMES = ['青龙','朱雀','勾陈','白虎','玄武','螣蛇'];
+const LIU_XING_NAMES = ['木','火','土','金','水','天'];
+const DZ_WUXING = {'子':'水','丑':'土','寅':'木','卯':'木','辰':'土','巳':'火','午':'火','未':'土','申':'金','酉':'金','戌':'土','亥':'水'};
+const YANG_DZ = ['子','寅','辰','午','申','戌'];
+const YIN_DZ = ['丑','卯','巳','未','酉','亥'];
+const ALL_DZ = '子丑寅卯辰巳午未申酉戌亥';
+
+function getRemainder(num){ return Math.floor(Math.abs(num))%6; }
+function walk(start, r){ const off = r===0?5:(r-1)%6; return (start+off)%6; }
+function calculate(n1,n2,n3){
+  const r1=getRemainder(n1),r2=getRemainder(n2),r3=getRemainder(n3);
+  const i1=walk(0,r1),i2=walk(i1,r2),i3=walk(i2,r3);
+  return {idx:[i1,i2,i3], names:[SHEN_NAMES[i1],SHEN_NAMES[i2],SHEN_NAMES[i3]], final:SHEN_NAMES[i3], remainders:[r1,r2,r3]};
+}
+function getShiChen(h){ const sc=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥']; return sc[Math.floor((h+1)/2)%12]; }
+
+function solarToLunar(y,m,d){
+  const L = Solar.fromYmd(y,m,d).getLunar();
+  const lm = L.getMonth();
+  return {
+    ly: L.getYear(),
+    lm: Math.abs(lm),
+    ld: L.getDay(),
+    leap: lm < 0,
+    gz: L.getYearInGanZhi(),
+    chinese: L.getYearInGanZhi()+'年'+L.getMonthInChinese()+'月'+L.getDayInChinese()
+  };
+}
+
+function generateJiangPai(names, shiChenDz){
+  const renGongName = names[2];
+  const isYang = YANG_DZ.includes(shiChenDz);
+  const dzList = isYang ? YANG_DZ : YIN_DZ;
+  let startIdx = dzList.indexOf(shiChenDz);
+  if(startIdx===-1) startIdx=0;
+  let diZhiMap={};
+  for(let i=0;i<6;i++){ diZhiMap[SHEN_NAMES[i]] = dzList[(startIdx+i)%6]; }
+  const selfDz = diZhiMap[renGongName];
+  const selfWx = DZ_WUXING[selfDz]||'';
+  const sheng={'木':'火','火':'土','土':'金','金':'水','水':'木'};
+  const ke={'木':'土','土':'水','水':'火','火':'金','金':'木'};
+  let qinMap={};
+  for(let sn of SHEN_NAMES){
+    if(sn===renGongName){ qinMap[sn]='自身'; continue; }
+    let wx = DZ_WUXING[diZhiMap[sn]]||'';
+    if(!selfWx||!wx){ qinMap[sn]=''; continue; }
+    if(selfWx===wx) qinMap[sn]='兄弟';
+    else if(sheng[selfWx]===wx) qinMap[sn]='子孙';
+    else if(sheng[wx]===selfWx) qinMap[sn]='父母';
+    else if(ke[selfWx]===wx) qinMap[sn]='妻财';
+    else if(ke[wx]===selfWx) qinMap[sn]='官鬼';
+    else qinMap[sn]='';
+  }
+  let result=[];
+  for(let i=0;i<6;i++){
+    let sn=SHEN_NAMES[i];
+    result.push({gong:sn, dz:diZhiMap[sn], qin:qinMap[sn], shen:LIU_SHEN_NAMES[i], xing:LIU_XING_NAMES[i]});
+  }
+  return {rows:result, selfDz:selfDz, selfWx:selfWx};
+}
+
+// 模拟古法提示词
+function buildGuFaPrompt(calc, lunar, sc, question, ts, method){
+  const methodMap={'manual':'✏️ 手动输入','time':'🕒 时间起卦','random':'🎲 随机起卦'};
+  return `【小六壬 · 古法排盘】AI解析请求\n═══════════════════════════════════════\n\n您好！以下是小六壬古法排盘的完整信息，请您根据这些信息进行分析与解读。\n\n📅 起卦时间：${ts}\n📝 问念：${question||'（未填写）'}\n🔢 三宫：${calc.names.join(' → ')}\n🎯 落点：${calc.final}（${SHEN_MEANING[calc.final]}）\n🛠 起卦方式：${methodMap[method]||'✏️ 手动输入'}\n\n请结合以上信息，从三宫落点、神煞含义等角度给出详细的解读与建议。谢谢！`;
+}
+// 模拟江氏提示词
+function buildJiangPrompt(calc, lunar, sc, jp, question, ts, method){
+  const methodMap={'manual':'✏️ 手动输入','time':'🕒 时间起卦','random':'🎲 随机起卦'};
+  const table = jp.rows.map(r=>`${r.gong}(${r.dz}) 亲:${r.qin||'—'} 神:${r.shen} 星:${r.xing}`).join('\n');
+  return `【小六壬 · 江氏排盘】AI解析请求\n═══════════════════════════════════════\n\n您好！以下是小六壬江氏排盘的完整信息，请您根据这些信息进行分析与解读。\n\n📅 起卦时间：${ts}\n📅 农历日期：${lunar.chinese}\n⏰ 当前时辰：${sc}时\n📝 问念：${question||'（未填写）'}\n🔢 三宫：${calc.names.join(' → ')}\n🎯 落点：${calc.final}（${SHEN_MEANING[calc.final]}）\n🛠 起卦方式：${methodMap[method]||'✏️ 手动输入'}\n\n【排盘表格】\n${table}\n\n请结合以上信息，从六亲、六神、六星等角度给出详细的解读与建议。谢谢！`;
+}
+
+// ===== 50组测试数据 =====
+const testData = [
+  // 第1-6组：余数0-5基础验证（验证walk算法）
+  {n1:6,n2:6,n3:6, y:2025,m:5,d:20,h:12, q:'问事业', method:'manual', desc:'余数全0(6%6=0)→落空亡'},
+  {n1:7,n2:7,n3:7, y:2025,m:5,d:20,h:12, q:'问婚姻', method:'manual', desc:'余数全1→落大安'},
+  {n1:8,n2:8,n3:8, y:2025,m:5,d:20,h:12, q:'问财运', method:'manual', desc:'余数全2→落留连'},
+  {n1:9,n2:9,n3:9, y:2025,m:5,d:20,h:12, q:'问健康', method:'manual', desc:'余数全3→落速喜'},
+  {n1:10,n2:10,n3:10, y:2025,m:5,d:20,h:12, q:'问考试', method:'manual', desc:'余数全4→落赤口'},
+  {n1:11,n2:11,n3:11, y:2025,m:5,d:20,h:12, q:'问出行', method:'manual', desc:'余数全5→落小吉'},
+  // 第7-20组：关键农历日期（春节/闰月/月末/跨年/历史事件）
+  {n1:2024,n2:2,n3:10, y:2024,m:2,d:10,h:8, q:'2024春节', method:'time', desc:'2024春节(甲辰正月初一)'},
+  {n1:2025,n2:1,n3:29, y:2025,m:1,d:29,h:6, q:'2025春节', method:'time', desc:'2025春节(乙巳正月初一)'},
+  {n1:2026,n2:2,n3:17, y:2026,m:2,d:17,h:10, q:'2026春节', method:'time', desc:'2026春节(丙午正月初一)'},
+  {n1:2025,n2:7,n3:25, y:2025,m:7,d:25,h:14, q:'闰六月初一', method:'time', desc:'2025闰六月初一'},
+  {n1:2025,n2:8,n3:22, y:2025,m:8,d:22,h:16, q:'闰六月廿九', method:'time', desc:'2025闰六月廿九(闰月末)'},
+  {n1:2033,n2:1,n3:31, y:2033,m:1,d:31,h:9, q:'2033春节', method:'time', desc:'2033春节(癸丑正月初一)'},
+  {n1:2057,n2:9,n3:29, y:2057,m:9,d:29,h:11, q:'旧算法错误点', method:'manual', desc:'2057-9-29(旧算法曾错)'},
+  {n1:2097,n2:8,n3:7, y:2097,m:8,d:7,h:13, q:'旧算法错误点', method:'manual', desc:'2097-8-7(旧算法曾错)'},
+  {n1:2099,n2:12,n3:31, y:2099,m:12,d:31,h:23, q:'数组边界', method:'manual', desc:'2099年末(数组边界)'},
+  {n1:2000,n2:2,n3:5, y:2000,m:2,d:5,h:5, q:'2000春节', method:'time', desc:'2000春节(庚辰正月初一)'},
+  {n1:2008,n2:8,n3:8, y:2008,m:8,d:8,h:20, q:'北京奥运', method:'time', desc:'2008奥运开幕(戊子七月初八)'},
+  {n1:1949,n2:10,n3:1, y:1949,m:10,d:1,h:15, q:'开国大典', method:'time', desc:'1949开国大典(己丑八月初十)'},
+  {n1:2025,n2:1,n3:1, y:2025,m:1,d:1,h:0, q:'公历元旦', method:'time', desc:'2025元旦(甲辰腊月初二)'},
+  {n1:2025,n2:12,n3:31, y:2025,m:12,d:31,h:23, q:'年末', method:'time', desc:'2025年末(乙巳冬月十二)'},
+  // 第21-40组：2000-2100覆盖性随机
+  {n1:345,n2:678,n3:901, y:2001,m:3,d:15,h:3, q:'随机1', method:'random', desc:'2001春'},
+  {n1:111,n2:222,n3:333, y:2003,m:7,d:20,h:5, q:'随机2', method:'random', desc:'2003夏'},
+  {n1:456,n2:789,n3:123, y:2005,m:11,d:8,h:7, q:'随机3', method:'random', desc:'2005冬'},
+  {n1:666,n2:888,n3:999, y:2010,m:6,d:18,h:9, q:'随机4', method:'random', desc:'2010夏'},
+  {n1:100,n2:200,n3:300, y:2012,m:12,d:21,h:11, q:'随机5', method:'random', desc:'2012冬至'},
+  {n1:246,n2:135,n3:975, y:2015,m:4,d:4,h:13, q:'随机6', method:'random', desc:'2015清明'},
+  {n1:864,n2:420,n3:951, y:2018,m:9,d:24,h:15, q:'随机7', method:'random', desc:'2018秋分'},
+  {n1:159,n2:357,n3:852, y:2020,m:2,d:29,h:17, q:'随机8', method:'random', desc:'2020闰年2/29'},
+  {n1:753,n2:951,n3:159, y:2022,m:10,d:1,h:19, q:'随机9', method:'random', desc:'2022国庆'},
+  {n1:321,n2:654,n3:987, y:2027,m:5,d:5,h:21, q:'随机10', method:'random', desc:'2027端午'},
+  {n1:147,n2:258,n3:369, y:2030,m:8,d:15,h:1, q:'随机11', method:'random', desc:'2030中元'},
+  {n1:741,n2:852,n3:963, y:2035,m:1,d:20,h:2, q:'随机12', method:'random', desc:'2035大寒'},
+  {n1:369,n2:258,n3:147, y:2040,m:7,d:7,h:4, q:'随机13', method:'random', desc:'2040小暑'},
+  {n1:951,n2:840,n3:730, y:2045,m:3,d:30,h:6, q:'随机14', method:'random', desc:'2045春末'},
+  {n1:555,n2:666,n3:777, y:2050,m:11,d:11,h:8, q:'随机15', method:'random', desc:'2050双十一'},
+  {n1:123,n2:456,n3:789, y:2055,m:6,d:6,h:10, q:'随机16', method:'random', desc:'2055芒种'},
+  {n1:987,n2:654,n3:321, y:2060,m:12,d:25,h:12, q:'随机17', method:'random', desc:'2060圣诞'},
+  {n1:336,n2:448,n3:559, y:2068,m:9,d:9,h:14, q:'随机18', method:'random', desc:'2068重阳'},
+  {n1:778,n2:889,n3:990, y:2075,m:2,d:14,h:16, q:'随机19', method:'random', desc:'2075情人节'},
+  {n1:111,n2:999,n3:555, y:2082,m:5,d:1,h:18, q:'随机20', method:'random', desc:'2082劳动节'},
+  // 第41-50组：边界数字
+  {n1:0,n2:0,n3:0, y:2025,m:5,d:20,h:12, q:'全零', method:'manual', desc:'数字全0(余数0)'},
+  {n1:-7,n2:-8,n3:-9, y:2025,m:5,d:20,h:12, q:'负数', method:'manual', desc:'负数(abs处理)'},
+  {n1:12,n2:18,n3:24, y:2025,m:5,d:20,h:12, q:'6的倍数', method:'manual', desc:'6的倍数(余数0)'},
+  {n1:9999,n2:8888,n3:7777, y:2025,m:5,d:20,h:12, q:'大数', method:'manual', desc:'大数(余数3,4,1)'},
+  {n1:1,n2:1,n3:1, y:2025,m:5,d:20,h:0, q:'最小正数子时', method:'manual', desc:'数字1+子时(0点)'},
+  {n1:1,n2:1,n3:1, y:2025,m:5,d:20,h:23, q:'最小正数亥时', method:'manual', desc:'数字1+亥时(23点)'},
+  {n1:1,n2:1,n3:1, y:2025,m:5,d:20,h:11, q:'最小正数午时', method:'manual', desc:'数字1+午时(11点)'},
+  {n1:6,n2:7,n3:8, y:2025,m:5,d:20,h:6, q:'混合余数', method:'manual', desc:'余数0,1,2混合'},
+  {n1:2025,n2:520,n3:888, y:2026,m:8,d:8,h:12, q:'今日排盘', method:'manual', desc:'2026-8-8午时(本测试日)'},
+  {n1:100,n2:100,n3:100, y:2100,m:12,d:31,h:23, q:'2100年末亥时', method:'time', desc:'2100年末(上限边界)'}
+];
+
+// ===== 运行测试 =====
+function run(){
+  const results = [];
+  let passCnt = 0;
+  const checkNames = ['余数范围','三宫有效','落点=人宫','时辰有效','农历有效','六神映射','六星映射','六亲含自身','地支有效','古法提示词','江氏提示词'];
+
+  testData.forEach((t,i)=>{
+    const calc = calculate(t.n1,t.n2,t.n3);
+    const lunar = solarToLunar(t.y,t.m,t.d);
+    const sc = getShiChen(t.h);
+    const jp = generateJiangPai(calc.names, sc);
+    const ts = `${t.y}-${String(t.m).padStart(2,'0')}-${String(t.d).padStart(2,'0')} ${String(t.h).padStart(2,'0')}:00:00`;
+    const guFa = buildGuFaPrompt(calc, lunar, sc, t.q, ts, t.method);
+    const jiangP = buildJiangPrompt(calc, lunar, sc, jp, t.q, ts, t.method);
+
+    const checks = {};
+    checks['余数范围'] = calc.remainders.every(r=>r>=0 && r<6);
+    checks['三宫有效'] = calc.names.every(n=>SHEN_NAMES.includes(n));
+    checks['落点=人宫'] = calc.final === calc.names[2];
+    checks['时辰有效'] = ALL_DZ.includes(sc);
+    checks['农历有效'] = lunar.ly > 1900 && lunar.lm >= 1 && lunar.ld >= 1 && lunar.ld <= 30;
+    checks['六神映射'] = jp.rows.every(r=>LIU_SHEN_NAMES.includes(r.shen));
+    checks['六星映射'] = jp.rows.every(r=>LIU_XING_NAMES.includes(r.xing));
+    checks['六亲含自身'] = jp.rows.some(r=>r.qin==='自身');
+    checks['地支有效'] = jp.rows.every(r=>ALL_DZ.includes(r.dz));
+    checks['古法提示词'] = guFa.includes('古法排盘') && guFa.includes('三宫') && guFa.includes('落点') && guFa.includes('起卦时间');
+    checks['江氏提示词'] = jiangP.includes('江氏排盘') && jiangP.includes('农历日期') && jiangP.includes('当前时辰') && jiangP.includes('排盘表格') && jiangP.includes(lunar.chinese);
+
+    const allPass = Object.values(checks).every(v=>v);
+    if(allPass) passCnt++;
+    results.push({i:i+1, t, calc, lunar, sc, jp, guFa, jiangP, checks, allPass});
+  });
+
+  renderSummary(passCnt, testData.length, results);
+  renderDetail(results, checkNames);
+}
+
+function renderSummary(pass, total, results){
+  const fail = total - pass;
+  const rate = (pass/total*100).toFixed(1);
+  // 统计农历年份分布
+  const years = [...new Set(results.map(r=>r.lunar.gz))];
+  // 统计时辰覆盖
+  const scs = [...new Set(results.map(r=>r.sc))];
+  // 统计落点分布
+  const finals = {};
+  results.forEach(r=>{ finals[r.calc.final]=(finals[r.calc.final]||0)+1; });
+  // 统计闰月
+  const leaps = results.filter(r=>r.lunar.leap);
+
+  document.getElementById('summary').innerHTML = `
+    <h2>📊 测试统计</h2>
+    <div class="summary">
+      <span class="stat">测试总数：<b>${total}</b> 组</span>
+      <span class="stat">通过：<span class="pass">${pass}</span></span>
+      <span class="stat">失败：<span class="${fail>0?'fail':'pass'}">${fail}</span></span>
+      <span class="stat">通过率：<b>${rate}%</b></span>
+    </div>
+    <div class="summary">
+      <span class="stat">覆盖农历干支年：<b>${years.length}</b> 种 (${years.join('、')})</span>
+      <span class="stat">覆盖时辰：<b>${scs.length}/12</b></span>
+      <span class="stat">含闰月样本：<b>${leaps.length}</b> 组</span>
+    </div>
+    <div class="summary">
+      <b>落点分布：</b>
+      ${SHEN_NAMES.map(s=>`${s}:${finals[s]||0}`).join(' ｜ ')}
+    </div>
+  `;
+}
+
+function renderDetail(results, checkNames){
+  let html = `<h2>📋 详细测试结果（50组）</h2>`;
+  html += `<table><thead><tr>
+    <th>#</th><th>输入(三数)</th><th>公历</th><th>时辰</th>
+    <th>余数</th><th>三宫</th><th>落点</th>
+    <th>农历(干支年月日)</th><th>江氏:自身宫/六亲</th>
+    <th>验证项</th><th>说明</th>
+  </tr></thead><tbody>`;
+  results.forEach(r=>{
+    const selfRow = r.jp.rows.find(x=>x.qin==='自身');
+    const qinStr = r.jp.rows.map(x=>x.qin||'—').join('/');
+    const checkStr = checkNames.map(n=>`<span class="${r.checks[n]?'ok':'ng'}">${r.checks[n]?'✓':'✗'}${n}</span>`).join(' ');
+    html += `<tr>
+      <td>${r.i}</td>
+      <td>${r.t.n1},${r.t.n2},${r.t.n3}</td>
+      <td>${r.t.y}-${String(r.t.m).padStart(2,'0')}-${String(r.t.d).padStart(2,'0')} ${String(r.t.h).padStart(2,'0')}时</td>
+      <td>${r.sc}时</td>
+      <td>${r.calc.remainders.join(',')}</td>
+      <td>${r.calc.names.join('→')}</td>
+      <td><b>${r.calc.final}</b></td>
+      <td>${r.lunar.chinese}</td>
+      <td>${selfRow?selfRow.gong+'('+selfRow.dz+')':'—'}<br><small>${qinStr}</small></td>
+      <td style="font-size:9px;text-align:left;">${checkStr}</td>
+      <td style="font-size:10px;">${r.t.desc}</td>
+    </tr>`;
+  });
+  html += `</tbody></table>`;
+
+  // 抽样展示3组完整提示词
+  html += `<h2>📝 提示词抽样（第1/9/49组）</h2>`;
+  [results[0], results[8], results[48]].forEach((r,idx)=>{
+    html += `<div class="summary"><h3>第${r.i}组 ${r.t.desc}</h3>`;
+    html += `<span class="tag tag-g">古法提示词（${r.guFa.length}字符）</span><pre style="white-space:pre-wrap;background:#fffdf6;padding:10px;border:1px solid #e0d4b8;border-radius:6px;font-size:11px;margin:6px 0;">${r.guFa}</pre>`;
+    html += `<span class="tag tag-j">江氏提示词（${r.jiangP.length}字符）</span><pre style="white-space:pre-wrap;background:#fffdf6;padding:10px;border:1px solid #e0d4b8;border-radius:6px;font-size:11px;margin:6px 0;">${r.jiangP}</pre>`;
+    html += `</div>`;
+  });
+
+  document.getElementById('detail').innerHTML = html;
+}
+
+run();
+</script>
+</body>
+</html>
