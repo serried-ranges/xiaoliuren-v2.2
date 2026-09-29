@@ -13599,12 +13599,8 @@ function bindMoreUI() {
         if (menuEdition) {
             menuEdition.addEventListener('click', function() {
                 toggleMoreMenu(false);
-                // 在统一站点中始终返回根路径标准页；不能依赖当前路径层级，避免 /lite/lite/ 循环。
-                if (window.location.protocol !== 'file:') {
-                    window.location.assign(new URL('/', window.location.origin).href);
-                } else {
-                    openMoreModal('切换页面', '<div class="more-section"><p>请从统一产品入口打开极简版后切换；当前独立极简文件仍可离线使用。</p></div>');
-                }
+                // 切换标准版：统一跳转到 V3 正式站点（x6ren.cn）；不再区分 file:// 或站点路径。
+                window.location.assign('https://x6ren.cn/');
             });
         }
     } catch (e) { console.warn('[more] 菜单项绑定失败：', e); }
