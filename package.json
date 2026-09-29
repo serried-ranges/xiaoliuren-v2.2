@@ -1,12 +1,14 @@
 {
   "name": "xiaoliuren-v2.2",
   "version": "2.2.0",
-  "description": "小六壬排盘 V2.2 — 独立工程化版本（8 模块 + 单文件打包）",
+  "description": "小六壬排盘 V2.2 — 独立工程化版本（12 模块 + 单文件打包）",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "check": "node --check src/core/lunar.js && node --check src/core/calculator.js && node --check src/core/browser-core.js && node --check src/core/domain-adapter.js && node --check src/prompts/canonical-prompt.js && node --check src/store/state.js && node --check src/utils/dom.js && node --check src/ui/template.js && node --check src/ui/feedback.js && node --check src/ui/more.js && node --check src/ui/renderer.js && node --check src/main.js",
+    "check:docs": "node scripts/check-docs-links.mjs",
     "test:all": "node test-v22-calculator.mjs && node test-v22-jiang-pai.mjs && node test-v22-dao-pai.mjs && node test-v22-lunar.mjs && node test-v22-data.mjs",
+    "test:compat": "node test-compat-full.mjs",
     "build": "node build-single.cjs",
     "build:protected": "node scripts/build-protected.cjs",
     "test:protected": "node test-v22-protected-release.cjs",

@@ -16,7 +16,9 @@
 ```powershell
 npm ci
 npm run check
+npm run check:docs
 npm run test:all
+npm run test:compat
 npm run build
 npm run build:protected
 npm run test:protected
@@ -25,6 +27,7 @@ npm run test:protected
 ## 约束
 
 - 不引入运行时网络依赖与 API Key；保持纯本地应用；
-- 不改变 `dist/`、`release/` 的生成方式（分别由 `npm run build` 与 `npm run build:protected` 产出，不手工编辑）；
+- 不改变 `dist/`、`release/` 的生成方式（分别由 `npm run build` 与 `npm run build:protected` 产出，不手工编辑；`release/index.html` 每次构建字节不同属正常，验证用 `npm run test:protected`）；
+- 移动 / 重命名文档后必须运行 `npm run check:docs`（CI 也会检查），确保没有死链；
 - 保持与 V2.1.2 的存储键名兼容（`liuShenHistory` / `liuShenTemplates`）与 V3 数据导入兼容；
 - 跨版本功能迁移请遵循主项目的「功能迁移单」流程，不直接复制 V3 代码。
