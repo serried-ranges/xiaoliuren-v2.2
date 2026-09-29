@@ -3,8 +3,10 @@ const fs = require('fs');
 const path = require('path');
 const { decodePayload } = require('./scripts/build-protected.cjs');
 
+let passed = 0;
 function check(label, condition) {
     if (!condition) throw new Error('❌ ' + label);
+    passed++;
     console.log('✅ ' + label);
 }
 
@@ -28,4 +30,4 @@ try {
     throw new Error('❌ 解码后的组合脚本语法错误：' + error.message);
 }
 
-console.log('V2.2 受保护发布测试通过：7');
+console.log('V2.2 受保护发布测试通过：' + passed);
