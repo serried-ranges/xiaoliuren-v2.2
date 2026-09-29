@@ -1,23 +1,24 @@
 # 小六壬 V2.2.0 开发指南
 
+> 状态：**已归档（2026-09-28）**，只读对照维护；本文是源码结构、加载顺序、构建 / 测试命令与排错的**唯一权威入口**。  
 > 交付物：`dist/index.html`（明码）+ `release/index.html`（混淆保护版）  
-> 环境要求：Node.js ≥ 14 LTS
+> 环境要求：Node.js ≥ 14 LTS 可运行脚本；CI 与推荐环境为 Node.js 22（见 `.github/workflows/ci.yml`）
 
 ---
 
-## 1. 目录结构
+## 1. 目录结构（源码视图）
 
 ```
-.
-├── index.html                 页面骨架（<script> 外链加载）
+├── index.html                 页面骨架（<script> 外链加载，顺序见 §3）
 ├── build-single.cjs           单文件打包脚本（Node 原生）
 ├── package.json               脚本入口
 ├── scripts/
-│   └── build-protected.cjs    受保护发布（混淆 + XOR 编码）
+│   ├── build-protected.cjs    受保护发布（混淆 + XOR 编码）
+│   └── check-docs-links.mjs   文档链接检查（CI）
 │
-├── styles/                    4 个 CSS（variables / base / feedback / template）
+├── styles/                    4 个 CSS（variables / base；feedback、template 为占位文件）
 │
-├── src/
+├── src/                       12 个模块，加载顺序见 §3
 │   ├── main.js                入口：事件绑定 + init()
 │   ├── core/                  算法层（纯函数）
 │   │   ├── lunar.js           农历库
@@ -34,14 +35,14 @@
 │       ├── feedback.js        解卦反馈弹窗
 │       └── more.js            更多菜单
 │
-├── dist/index.html            🎯 明码交付物
-├── release/index.html         🔒 混淆保护版
-│
-└── 测试文件（5 个核心脚本，267 项断言；保护版另有 7 项检查）
+└── 测试（数字口径见版本说明 §4；全部运行通过）
     ├── test-v22-calculator.mjs / test-v22-jiang-pai.mjs
     ├── test-v22-dao-pai.mjs / test-v22-lunar.mjs
-    ├── test-v22-data.mjs / test-v22-protected-release.cjs
+    ├── test-v22-data.mjs / test-compat-full.mjs
+    └── test-v22-protected-release.cjs
 ```
+
+> 完整仓库清单（docs/、history/、交付物与许可）见[版本说明 §4](版本说明.md)。
 
 ---
 
@@ -102,11 +103,13 @@ npm run check
 ### 4.3 测试
 
 ```powershell
-npm run test:all
-npm run test:protected
+npm run test:all        # 5 个自包含核心脚本
+npm run test:compat     # V2.2 ↔ V3.0 数据兼容
+npm run test:protected  # 受保护发布包检查
+npm run check:docs      # 文档相对链接检查
 ```
 
-`test:all` 运行五个历史核心测试脚本；六亲和道传断言已按归档逻辑中的五行生克、活六神轮转与隔支公式校正。测试脚本是自包含的逻辑副本，不直接导入运行时模块，可能发生漂移；它们只提供规则回归参考，不代表真实页面或打包产物的完整行为验收。
+`test:all` 运行 5 个核心脚本（2026-09-30 实测合计 571 项断言全部通过；数字以命令输出为准，口径见[版本说明 §4](版本说明.md)）。注意：核心测试脚本是自包含的逻辑副本，不直接导入运行时模块，**可能发生漂移；它们只提供规则回归参考，不代表真实页面或打包产物的完整行为验收**；页面行为按 §4.5 双击产物人工检查。
 
 ### 4.4 构建
 
@@ -120,6 +123,8 @@ npm run build:protected
 # 验证保护版
 npm run test:protected
 ```
+
+> 注意：受保护构建**每次输出字节不同**（混淆器带随机性，产物大小相同）；重建后 `release/index.html` 在 `git status` 中显示变更属正常现象，不要用哈希或 `git diff` 判断发布包新旧，验证一律使用 `npm run test:protected`。
 
 ### 4.5 验证清单
 
@@ -153,17 +158,9 @@ npm run test:protected
 
 ---
 
-## 6. 持久化 Key 清单
+## 6. 持久化 Key
 
-| Key | 形式 | 说明 |
-|-----|------|------|
-| `liuShenHistory_{userId}` | JSON 数组 | 历史记录 |
-| `liuShenTemplates_{userId}` | JSON 对象 | 自定义模板 |
-| `xll_divination_mode_{userId}` | 字符串 | 排盘模式 |
-| `xll_ai_prompt_key` | 字符串 | AI 模板选择 |
-| `xll_userId` | 字符串 | 用户身份 ID |
-
-> 加载时始终加兜底：`|| []`、`|| {}`、`|| 'gufa'`
+完整键名清单、身份隔离与导入导出口径见[数据兼容与迁移](数据兼容与迁移.md)（唯一权威入口）。开发约定：所有读取都要加兜底（如 `|| []`、`|| {}`、`|| 'gufa'`、`|| 'gupai'`），不得假设键一定存在。
 
 ---
 
@@ -185,6 +182,7 @@ npm run test:protected
 | 切换模式后渲染错误 | switchDivinationMode 参数错误 | 确认 `silent=false` |
 | 新增 JS 不生效 | 未在 index.html 登记 | 按 §7 同步修改 |
 | 打包报错 | CSS/JS 路径不对 | 确保使用相对路径 |
+| 文档检查失败 | 移动/重命名文档后链接失效 | 运行 `npm run check:docs`，按提示修正相对路径 |
 
 ---
 

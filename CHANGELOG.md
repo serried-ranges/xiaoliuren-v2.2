@@ -2,6 +2,15 @@
 
 > 本仓库的独立变更日志，最新在上。迁仓前的历史见主项目 [`serried-ranges/xiaoliuren`](https://github.com/serried-ranges/xiaoliuren) 的 CHANGELOG 与 `历史记录/`。
 
+## [2026-09-30] — 文档治理：接手指南、去重与数字校正、链接门禁
+
+- 新增 [重启与接手指南](docs/重启与接手指南.md)：恢复环境与全量验收、权威信息地图、已知事项与历史债务、解冻重启决策门槛；
+- **事实校正**（以 2026-09-30 实测为准）：5 个核心脚本合计 **571** 项断言（69 / 93 / 104 / 38 / 267；此前文档按 267 记载有误）；兼容测试 144 用例、受保护包 7 项检查；今后数字以命令输出为准并同步 README 与版本说明；
+- 文档去重（单一权威入口）：版本事实 / 文件清单 / 测试数字 → [版本说明](docs/版本说明.md)；结构与命令 → [开发者指南](docs/DEVELOPER_GUIDE_V2.2.0.md)；本地键名 → [数据兼容与迁移](docs/数据兼容与迁移.md)；同一事实不再多处重复；
+- 归档处理：删除 `docs/index.html` 与 `docs/.nojekyll`（陈旧 App 副本，未部署 GitHub Pages、无文档引用；Git 历史可回溯）；`history/` 增加阅读须知，审计文档补充失效本机链接说明；
+- 新增文档链接检查 `npm run check:docs`（`scripts/check-docs-links.mjs`，零依赖）并接入 CI；README / CONTRIBUTING 同步更新门禁清单；
+- 本次只调整文档与门禁，不改变运行时行为；`check / check:docs / test:all / test:compat / build / build:protected / test:protected` 全部通过。
+
 ## [2026-09-28] — 接收 V2.x 历史归档与跨版本兼容测试
 
 - 从主项目 `历史记录/` 迁入 `history/V2.1/`（5 个文件：两个单 HTML 版本、农历库、本地服务器脚本、手工测试页）与 `history/V2.2/`（审计与路线图各 1 份），新增 [历史归档索引](history/README.md)；
