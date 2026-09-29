@@ -258,5 +258,5 @@ if (aiResult && aiResult.jixiong_score) renderAI(aiResult); else showManualHint(
 |------|------|
 | 当前 V2.2 使用说明 | [独立仓库使用说明](https://github.com/serried-ranges/xiaoliuren-v2.2/blob/main/docs/%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E_V2.2.md) |
 | 本归档中的迭代规划 | [ROADMAP_V2.3.0.md](ROADMAP_V2.3.0.md) |
-| 当前 V2.2 开发指南 | [独立仓库开发指南](https://github.com/serried-ranges/xiaoliuren-v2.2/blob/main/docs/DEVELOPER_GUIDE_V2.2.0.md) |
+| 当前 V2.2 开发指南 | [独立仓库开发指南](https://github.com/serried-ranges/xiaoliuren-v2.2/blob/main/docs/%E5%BC%80%E5%8F%91%E8%80%85%E6%8C%87%E5%8D%97.md) |
 | 项目变更记录 | [../../CHANGELOG.md](../../CHANGELOG.md) |

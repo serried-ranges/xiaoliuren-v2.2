@@ -205,5 +205,5 @@
 |------|------|
 | 当前 V2.2 使用说明 | [独立仓库使用说明](https://github.com/serried-ranges/xiaoliuren-v2.2/blob/main/docs/%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E_V2.2.md) |
 | 本归档中的代码审计 | [AUDIT_V2.2.0_OPTIMIZATIONS.md](AUDIT_V2.2.0_OPTIMIZATIONS.md) |
-| 当前 V2.2 开发指南 | [独立仓库开发指南](https://github.com/serried-ranges/xiaoliuren-v2.2/blob/main/docs/DEVELOPER_GUIDE_V2.2.0.md) |
+| 当前 V2.2 开发指南 | [独立仓库开发指南](https://github.com/serried-ranges/xiaoliuren-v2.2/blob/main/docs/%E5%BC%80%E5%8F%91%E8%80%85%E6%8C%87%E5%8D%97.md) |
 | 项目变更记录 | [../../CHANGELOG.md](../../CHANGELOG.md) |
