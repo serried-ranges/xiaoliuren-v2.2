@@ -18,7 +18,7 @@ npm ci                  # 安装依赖（Vite，仅开发/构建用）
 npm run dev             # 本地开发（Vite HMR）
 npm run check           # 语法检查（12 个模块）
 npm run check:docs      # 文档链接检查
-npm run test:all        # 5 个核心测试脚本（571 项断言，口径见 docs/版本说明.md）
+npm run test:all        # 5 个核心测试脚本（579 项断言，口径见 docs/版本说明.md）
 npm run test:compat     # V2.2 ↔ V3.0 数据兼容（144 用例）
 npm run build           # 构建 dist/index.html（明码单文件）
 npm run build:protected # 构建 release/index.html（混淆保护版）
@@ -29,8 +29,8 @@ npm run test:protected  # 验证受保护发布包（8 条断言）
 
 | 产物 | 说明 |
 |---|---|
-| `dist/index.html` | 明码单文件，双击即用；可由源码逐字节复现（735,742 字节） |
-| `release/index.html` | 混淆保护版；**只是源码可读性门槛，不是密钥保护**；每次构建字节不同（959,395 字节，验证用 `test:protected`） |
+| `dist/index.html` | 明码单文件，双击即用；可由源码逐字节复现（734,090 字节） |
+| `release/index.html` | 混淆保护版；**只是源码可读性门槛，不是密钥保护**；每次构建字节不同（约 941,000 字节，验证用 `test:protected`） |
 
 ## 数据与边界
 
