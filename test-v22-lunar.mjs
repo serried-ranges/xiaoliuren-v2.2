@@ -1,7 +1,12 @@
 /**
  * V2.2 单元测试：农历/时辰/工具函数 (lunar+utils)
- * 从 V2.2 src/core/calculator.js 提取可测试逻辑
+ * 从 V2.2 src/core/calculator.js 提取可测试逻辑；
+ * 【6】节直接加载 src/core/lunar.js 验证真实农历转换（其余小节为自包含副本）。
  */
+import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import vm from 'node:vm';
 
 // ===== V2.2 原始逻辑（1:1 提取） =====
 function getShiChen(hours) {
@@ -83,6 +88,33 @@ console.log('\n【5】formatTime');
 const ts = new Date(2025, 0, 29, 14, 30, 5).getTime();
 const formatted = formatTime(ts);
 check('formatTime 结果', formatted, '2025-01-29 14:30:05');
+
+// ==================== 6. 真实农历转换（加载 src/core/lunar.js） ====================
+// 本节覆盖 solarToLunar 依赖的 Solar → Lunar 转换；样例为公开可核对的农历日期。
+console.log('\n【6】真实农历转换（lunar.js）');
+const __dirname = dirname(fileURLToPath(import.meta.url));
+let SolarLib;
+try {
+    const lunarSrc = readFileSync(join(__dirname, 'src/core/lunar.js'), 'utf8');
+    const lunarSandbox = {};
+    vm.createContext(lunarSandbox);
+    vm.runInContext(lunarSrc, lunarSandbox, { filename: 'src/core/lunar.js' });
+    SolarLib = lunarSandbox.Solar;
+} catch (e) {
+    throw new Error('❌ 无法加载 src/core/lunar.js：' + e.message);
+}
+function lunarText(y, m, d) {
+    const l = SolarLib.fromYmd(y, m, d).getLunar();
+    return l.getYear() + '年' + (l.getMonth() < 0 ? '闰' : '') + Math.abs(l.getMonth()) + '月' + l.getDay() + '日';
+}
+checkTrue('lunar.js 已加载 Solar', typeof SolarLib === 'object' && SolarLib !== null && typeof SolarLib.fromYmd === 'function');
+check('2025 春节', lunarText(2025, 1, 29), '2025年1月1日');
+check('2024 春节', lunarText(2024, 2, 10), '2024年1月1日');
+check('2026 春节', lunarText(2026, 2, 17), '2026年1月1日');
+check('2023 闰二月', lunarText(2023, 3, 22), '2023年闰2月1日');
+check('2025 闰六月', lunarText(2025, 7, 25), '2025年闰6月1日');
+check('2024 除夕（农历岁末）', lunarText(2024, 2, 9), '2023年12月30日');
+check('1900 起点', lunarText(1900, 1, 31), '1900年1月1日');
 
 // ==================== 汇总 ====================
 const passed = checks.filter(c => c.ok).length;

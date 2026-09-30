@@ -8,8 +8,8 @@ const SHEN_NAMES = ['大安', '留连', '速喜', '赤口', '小吉', '空亡'];
 const DZ_WUXING = { '子': '水', '丑': '土', '寅': '木', '卯': '木', '辰': '土', '巳': '火', '午': '火', '未': '土', '申': '金', '酉': '金', '戌': '土', '亥': '水' };
 const YANG_DZ = ['子', '寅', '辰', '午', '申', '戌'];
 const YIN_DZ = ['丑', '卯', '巳', '未', '酉', '亥'];
-const LIU_SHEN_NAMES = ['青龙', '朱雀', '勾陈', '白虎', '玄武', '螣蛇'];
-const LIU_XING_NAMES = ['木', '火', '土', '金', '水', '天'];
+const LIU_SHEN_NAMES = ['青龙', '朱雀', '勾陈', '白虎', '玄武', '腾蛇'];
+const LIU_XING_NAMES = ['木星', '火星', '土星', '金星', '水星', '天星'];
 
 function generateJiangPai(answers, shiChenDz) {
     const renGongName = answers[2].shen.name;
@@ -67,13 +67,13 @@ function generateJieGua(jiangData, renGongName) {
     else if (shen === '勾陈') parts.push('勾陈主勾连、阻滞、旧事，临此宫多主牵连与拖延。');
     else if (shen === '白虎') parts.push('白虎主凶灾、血光、压力，临此宫需防范意外。');
     else if (shen === '玄武') parts.push('玄武主暗昧、盗贼、暧昧，临此宫需防小人暗算。');
-    else if (shen === '螣蛇') parts.push('螣蛇主虚惊、多疑、缠绕，临此宫需放宽心态。');
-    if (xing === '木') parts.push('木星主生机、扩张，宜积极进取。');
-    else if (xing === '火') parts.push('火星主急躁、快速，宜速战速决。');
-    else if (xing === '土') parts.push('土星主迟缓、稳定，宜耐心等待。');
-    else if (xing === '金') parts.push('金星主果断、变革，宜果断决策。');
-    else if (xing === '水') parts.push('水星主智慧、流动，宜灵活应变。');
-    else if (xing === '天') parts.push('天空主虚无、落空，宜保守观望。');
+    else if (shen === '腾蛇') parts.push('螣蛇主虚惊、多疑、缠绕，临此宫需放宽心态。');
+    if (xing === '木星') parts.push('木星主生机、扩张，宜积极进取。');
+    else if (xing === '火星') parts.push('火星主急躁、快速，宜速战速决。');
+    else if (xing === '土星') parts.push('土星主迟缓、稳定，宜耐心等待。');
+    else if (xing === '金星') parts.push('金星主果断、变革，宜果断决策。');
+    else if (xing === '水星') parts.push('水星主智慧、流动，宜灵活应变。');
+    else if (xing === '天星') parts.push('天空主虚无、落空，宜保守观望。');
     if (parts.length === 0) return '此卦信息不足，请重新起卦。';
     return parts.join(' ');
 }
@@ -115,9 +115,9 @@ check('空亡地支', rowsZi[5].dz, '戌');
 check('大安六神', rowsZi[0].shen, '青龙');
 check('留连六神', rowsZi[1].shen, '朱雀');
 check('速喜六神', rowsZi[2].shen, '勾陈');
-check('大安六星', rowsZi[0].xing, '木');
-check('留连六星', rowsZi[1].xing, '火');
-check('速喜六星', rowsZi[2].xing, '土');
+check('大安六星', rowsZi[0].xing, '木星');
+check('留连六星', rowsZi[1].xing, '火星');
+check('速喜六星', rowsZi[2].xing, '土星');
 check('人宫(速喜)六亲', rowsZi[2].qin, '自身');
 
 // ==================== 2. 午时排盘 ====================

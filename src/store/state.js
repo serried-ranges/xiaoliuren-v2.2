@@ -5,7 +5,7 @@
 'use strict';
 
 // ===== safeLS: localStorage 安全包装（file:// 下 LS 可能被禁用，所有调用走这里）=====
-// V2.2.1：记录最近一次底层异常（lastError），供 detectLSAvailability 区分「禁用(Security)/配额不足(Quota)」
+// V2.2：记录最近一次底层异常（lastError），用于诊断「禁用(Security)/配额不足(Quota)」
 var safeLS = (function() {
     var _ls = null;
     var _lastError = null;
@@ -145,13 +145,9 @@ console.log('[V2.2-fix] safeLS 初始化 | LS 可用=' + safeLS.isAvailable() + 
             var shenRefGrid2 = document.getElementById('shenRefGrid2');
             var xingRefGrid = document.getElementById('xingRefGrid');
 
-            // 更多菜单 DOM
+            // 更多菜单 DOM（弹窗引用由 more.js 自行懒加载）
             var moreBtn = document.getElementById('moreBtn');
             var moreMenu = document.getElementById('moreMenu');
-            var moreModalMask = document.getElementById('moreModalMask');
-            var moreModalClose = document.getElementById('moreModalClose');
-            var moreModalBody = document.getElementById('moreModalBody');
-            var moreModalTitle = document.getElementById('moreModalTitle');
 
             // 进阶排盘面板
             var advancedPanel = document.getElementById('advancedPanel');
@@ -324,7 +320,7 @@ console.log('[V2.2-fix] safeLS 初始化 | LS 可用=' + safeLS.isAvailable() + 
                             alert('文件内容为空。'); return;
                         }
                         var raw = JSON.parse(rawText);
-                        var imported, importMeta;
+                        var imported;
                         // 兼容四种格式（按优先级）：
                         // 1) V3.0 信封：{ version, history, customTemplates }
                         // 2) V2.2.1 信封：{ version: "2.2", history }
@@ -333,19 +329,15 @@ console.log('[V2.2-fix] safeLS 初始化 | LS 可用=' + safeLS.isAvailable() + 
                         if (raw && typeof raw === 'object' && !Array.isArray(raw)) {
                             if (Array.isArray(raw.history)) {
                                 imported = raw.history;
-                                importMeta = { version: raw.version || 'unknown', hasTemplates: !!raw.customTemplates };
                             } else if (Array.isArray(raw.records)) {
                                 imported = raw.records;
-                                importMeta = { version: raw.version || 'unknown', hasTemplates: false };
                             } else if (Array.isArray(raw.data)) {
                                 imported = raw.data;
-                                importMeta = { version: raw.version || 'unknown', hasTemplates: false };
                             } else {
                                 alert('JSON 格式错误：未找到 history/records/data 数组。'); return;
                             }
                         } else if (Array.isArray(raw)) {
                             imported = raw;
-                            importMeta = { version: 'unknown', hasTemplates: false };
                         } else {
                             alert('JSON 格式错误：期望为数组或 { history/records/data: [...] } 信封格式。'); return;
                         }
@@ -441,28 +433,6 @@ console.log('[V2.2-fix] safeLS 初始化 | LS 可用=' + safeLS.isAvailable() + 
             var currentAiBox = null;
             // P0.7 + P1.2：当前 AI 提示词 key（gupai / jiangshi / daochuan），与排盘模式绑定并持久化
             var currentAIPromptKey = safeLS.getItem('xll_ai_prompt_key') || 'gupai';
-
-            // P0.7：三套 AI 提示词模板（从 V3.0 迁移）
-            var AI_PROMPTS = {
-                gupai: {
-                    id: 'gupai',
-                    name: '古法排盘',
-                    description: '小六壬古法三宫推算，适用ChatGPT、DeepSeek等',
-                    icon: '📜'
-                },
-                jiangshi: {
-                    id: 'jiangshi',
-                    name: '江氏小六壬',
-                    description: '江氏排盘，侧重六亲六神六星分析',
-                    icon: '☯'
-                },
-                daochuan: {
-                    id: 'daochuan',
-                    name: '道传小六壬',
-                    description: '道传体系，死活六神双轨合参 + 六亲分析',
-                    icon: '🔯'
-                }
-            };
 
             function loadCustomTemplates() {
                 try { return JSON.parse(safeLS.getItem(_tkey()) || '{}'); } catch { return {}; }

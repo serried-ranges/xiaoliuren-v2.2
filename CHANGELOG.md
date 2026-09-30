@@ -2,6 +2,17 @@
 
 > 本仓库的独立变更日志，最新在上。迁仓前的历史见主项目 [`serried-ranges/xiaoliuren`](https://github.com/serried-ranges/xiaoliuren) 的 CHANGELOG 与 `历史记录/`。
 
+## [2026-10-01] — 待办修复批：模式持久化、数据口径统一、PWA 名称与测试补充
+
+- **模式持久化修复**：`src/main.js` 初始化读取并恢复上次排盘模式（默认古法）；浏览器实测江氏 / 道传 / 古法往返刷新保持，AI 提示词 key 联动；
+- **数据口径统一**（对齐运行时 `browser-core.js`）：空亡释义「谋事落空，徒劳无功」、六星「木星…天星」、六神「腾蛇」；道传解卦采用长版「【道传·死活六神双轨合参】…」；`calculator.js`、知识速查与测试副本同步；
+- **PWA 名称统一为 V2.2.0**：manifest、主屏名称与页面脚本版本串（原落款 V2.1.2 / V2.2.1-fix4 / V2.2.1-fix5）；
+- **清理死代码与失真注释**：`AI_PROMPTS`、`moreModal*` 死引用、`importMeta`、`canonical-prompt.js` 与 `index.html` 过期注释；
+- **`fallbackCopy` 合并**为 `dom.js` 单一实现（支持自定义成功提示），移除 `more.js` 重复定义；
+- **测试补充**：`test-v22-lunar.mjs` 新增【6】节，加载真实 `src/core/lunar.js` 验证 7 个公开日期；核心断言 571 → 579；
+- 交付物重建：`dist` 734,090 字节（可由源码复现）、`release` 同步更新（混淆构建不可逐字节复现）；门禁全绿（check / check:docs / test:all / test:compat / build / build:protected / test:protected）；
+- 待办 8 项全部关闭（6 项修复 + 2 项确认保持现状），详见 [待办事项与方案进度](文档/治理/待办事项与方案进度.md)。
+
 ## [2026-09-30] — 文档全量治理：三层结构、逐条对照源码与测试标签修正
 
 - 文档结构与主项目对齐：`docs/`（开发事实）+ `文档/`（治理 / 产品 / 质量与审计）+ `history/`（历史）；`归档说明.md` 移至仓库根；`docs/重启与接手指南.md` 调整为 `文档/治理/接手与重启.md`；`DEVELOPER_GUIDE_V2.2.0.md` 更名为 `docs/开发者指南.md`；

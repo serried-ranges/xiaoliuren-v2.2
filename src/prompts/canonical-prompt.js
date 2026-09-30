@@ -1,9 +1,8 @@
 /**
  * 统一排盘提示词基线。
  *
- * 无 DOM、无存储、无网络依赖。“AI解析”复制单盘提示词时使用；标准/极简由
- * 同一个 Vite 入口加载。保留全局注册形式供历史 Script 适配测试，不代表仍有
- * 两套运行页面。一键合参请求由同目录 analysis-prompt.js 维护。
+ * 无 DOM、无存储、无网络依赖。“AI解析”复制单盘提示词时使用；按当前排盘模式
+ * （古法 / 江氏 / 道传）生成对应请求。保留全局注册形式供经典 <script> 加载。
  */
 (function registerCanonicalPrompts(root) {
   'use strict';

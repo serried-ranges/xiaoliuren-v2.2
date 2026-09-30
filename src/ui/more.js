@@ -178,33 +178,17 @@ function openMoreModal(title, htmlContent) {
                     navigator.clipboard.writeText(text).then(function() {
                         showToast('已复制：' + text, 'success');
                     }).catch(function() {
-                        fallbackCopy(text);
+                        fallbackCopy(text, '已复制：' + text);
                     });
                 } else {
-                    fallbackCopy(text);
+                    fallbackCopy(text, '已复制：' + text);
                 }
             } catch (e) {
-                fallbackCopy(text);
+                fallbackCopy(text, '已复制：' + text);
             }
         });
         el.style.cursor = 'pointer';
     });
-}
-
-function fallbackCopy(text) {
-    try {
-        var ta = document.createElement('textarea');
-        ta.value = text;
-        ta.style.position = 'fixed';
-        ta.style.opacity = '0';
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand('copy');
-        document.body.removeChild(ta);
-        showToast('已复制：' + text, 'success');
-    } catch (e) {
-        showToast('复制失败，请手动选择文本复制', 'error');
-    }
 }
 
 function closeMoreModal() {

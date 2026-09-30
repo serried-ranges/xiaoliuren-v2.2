@@ -7,7 +7,7 @@
     <!-- 最早执行：检测 localStorage 是否可用，file:// 禁用时给醒目提示 -->
     <script>
     (function() {
-        console.log('[小六壬] V2.2.1-fix5 预检 @ ' + new Date().toISOString());
+        console.log('[小六壬] V2.2.0 预检 @ ' + new Date().toISOString());
         var lsOk = false;
         try {
             var k = '__xll_precheck_' + Date.now();
@@ -30,14 +30,14 @@
     <link rel="stylesheet" href="styles/base.css" />
     <link rel="stylesheet" href="styles/template.css" />
     <link rel="stylesheet" href="styles/feedback.css" />
-    <!-- ===== V2.1.2 PWA / 添加到主屏幕 元信息 ===== -->
+    <!-- ===== V2.2 PWA / 添加到主屏幕 元信息 ===== -->
     <meta name="theme-color" content="#c8a84e" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <meta name="apple-mobile-web-app-title" content="小六壬 V2.1.2" />
+    <meta name="apple-mobile-web-app-title" content="小六壬 V2.2.0" />
     <meta name="mobile-web-app-capable" content="yes" />
     <!-- PWA manifest（内联 data URL，离线/单文件不依赖额外文件） -->
-    <link rel="manifest" href='data:application/manifest+json;charset=utf-8,{"name":"小六壬 · 速断排盘 V2.1.2","short_name":"小六壬","description":"小六壬排盘 — 速断排盘（V2.1.2 单文件离线版）","start_url":".","display":"standalone","orientation":"portrait","background_color":"#f0ebe4","theme_color":"#c8a84e","lang":"zh-CN","icons":[{"src":"data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 192 192%22><rect width=%22192%22 height=%22192%22 fill=%22%23f0ebe4%22/><circle cx=%2296%22 cy=%2296%22 r=%2284%22 fill=%22%23d4af37%22/><text x=%2250%25%22 y=%2254%25%22 font-size=%22104%22 text-anchor=%22middle%22 fill=%22white%22>☯</text></svg>","sizes":"192x192","type":"image/svg+xml","purpose":"any maskable"},{"src":"data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 512 512%22><rect width=%22512%22 height=%22512%22 fill=%22%23f0ebe4%22/><circle cx=%22256%22 cy=%22256%22 r=%22224%22 fill=%22%23d4af37%22/><text x=%2250%25%22 y=%2256%25%22 font-size=%22280%22 text-anchor=%22middle%22 fill=%22white%22>☯</text></svg>","sizes":"512x512","type":"image/svg+xml","purpose":"any maskable"}]}' />
+    <link rel="manifest" href='data:application/manifest+json;charset=utf-8,{"name":"小六壬 · 速断排盘 V2.2.0","short_name":"小六壬","description":"小六壬排盘 — 速断排盘（V2.2.0 单文件离线版）","start_url":".","display":"standalone","orientation":"portrait","background_color":"#f0ebe4","theme_color":"#c8a84e","lang":"zh-CN","icons":[{"src":"data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 192 192%22><rect width=%22192%22 height=%22192%22 fill=%22%23f0ebe4%22/><circle cx=%2296%22 cy=%2296%22 r=%2284%22 fill=%22%23d4af37%22/><text x=%2250%25%22 y=%2254%25%22 font-size=%22104%22 text-anchor=%22middle%22 fill=%22white%22>☯</text></svg>","sizes":"192x192","type":"image/svg+xml","purpose":"any maskable"},{"src":"data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 512 512%22><rect width=%22512%22 height=%22512%22 fill=%22%23f0ebe4%22/><circle cx=%22256%22 cy=%22256%22 r=%22224%22 fill=%22%23d4af37%22/><text x=%2250%25%22 y=%2256%25%22 font-size=%22280%22 text-anchor=%22middle%22 fill=%22white%22>☯</text></svg>","sizes":"512x512","type":"image/svg+xml","purpose":"any maskable"}]}' />
     <!-- iOS 添加到主屏幕的图标（内联 SVG，离线可用） -->
     <link rel="apple-touch-icon" href='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 180 180%22><rect width=%22180%22 height=%22180%22 rx=%2238%22 fill=%22%23f0ebe4%22/><circle cx=%2290%22 cy=%2290%22 r=%2274%22 fill=%22%23d4af37%22/><text x=%2250%25%22 y=%2255%25%22 font-size=%2296%22 text-anchor=%22middle%22 fill=%22white%22>☯</text></svg>' />
 </head>
@@ -273,12 +273,11 @@
         <span id="toastMessage">已复制到剪贴板</span>
     </div>
 
-        <!-- ===== V2.2 工程化：农历库（src/core/lunar.js · ~419 KB）===== -->
+        <!-- ===== V2.2 工程化：农历库（src/core/lunar.js · 约 434 KB）===== -->
     <script src="src/core/lunar.js"></script>
 
 
-    <!-- ===== V2.2 工程化：应用代码整体（src/app-all.js · ~142 KB，后续可细拆为子模块）===== -->
-    <!-- ===== V2.2 工程化：app-all.js 已拆分为 8 个子模块，按依赖顺序加载（共享 Script scope）===== -->
+    <!-- ===== V2.2 工程化：应用代码拆分为 12 个模块，按依赖顺序加载（共享 Script scope，顺序不可变）===== -->
     <script src="src/core/calculator.js"></script>
     <script src="src/core/browser-core.js"></script>
     <script src="src/core/domain-adapter.js"></script>

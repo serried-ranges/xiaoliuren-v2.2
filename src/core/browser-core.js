@@ -505,11 +505,14 @@ var XiaoliurenDomain = function(exports) {
     const ren = rows[2];
     const startGongName = getDaoStartGongName(shiChen);
     return [
-      `【道传·死活六神】时辰「${shiChen}」，青龙起于「${startGongName}」。`,
-      `人宫落${ren.gong}（五行${ren.gongWx}）：`,
+      "【道传·死活六神双轨合参】",
+      `时辰「${shiChen}」→ 青龙起于「${startGongName}」（活六神轮值起点）。`,
+      `地支排法：以人宫时辰「${shiChen}」为基准，顺时针隔位相排。`,
+      `人宫落${ren.gong}（五行${ren.gongWx}，地支${ren.dz}）：`,
       `死六神「${ren.siShen}」${ren.siShenWx}（${ren.siShenDesc}）；`,
       `活六神「${ren.huoShen}」（${ren.huoShenDesc}）；`,
-      `六亲为${ren.qin}（${ren.qinDesc}）。`
+      `六亲为${ren.qin}（${ren.qinDesc}）。`,
+      "死神为体（事之本），活神为用（时之机），双轨合参断事理。"
     ].join("");
   }
   exports.calculate = calculate;

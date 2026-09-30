@@ -1,7 +1,7 @@
 /**
  * 农历库（lunar-javascript 权威库）
  * 来源：V2.1.2 第一个 <script> 块
- * 大小：~419 KB
+ * 大小：约 434 KB
  * 暴露：window.Lunar  等全局命名空间（由原库自行定义）
  */
 

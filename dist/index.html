@@ -7,7 +7,7 @@
     <!-- 最早执行：检测 localStorage 是否可用，file:// 禁用时给醒目提示 -->
     <script>
     (function() {
-        console.log('[小六壬] V2.2.1-fix5 预检 @ ' + new Date().toISOString());
+        console.log('[小六壬] V2.2.0 预检 @ ' + new Date().toISOString());
         var lsOk = false;
         try {
             var k = '__xll_precheck_' + Date.now();
@@ -1986,14 +1986,14 @@
 /* ===== 解卦反馈样式占位 ===== */
 
 </style>
-    <!-- ===== V2.1.2 PWA / 添加到主屏幕 元信息 ===== -->
+    <!-- ===== V2.2 PWA / 添加到主屏幕 元信息 ===== -->
     <meta name="theme-color" content="#c8a84e" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <meta name="apple-mobile-web-app-title" content="小六壬 V2.1.2" />
+    <meta name="apple-mobile-web-app-title" content="小六壬 V2.2.0" />
     <meta name="mobile-web-app-capable" content="yes" />
     <!-- PWA manifest（内联 data URL，离线/单文件不依赖额外文件） -->
-    <link rel="manifest" href='data:application/manifest+json;charset=utf-8,{"name":"小六壬 · 速断排盘 V2.1.2","short_name":"小六壬","description":"小六壬排盘 — 速断排盘（V2.1.2 单文件离线版）","start_url":".","display":"standalone","orientation":"portrait","background_color":"#f0ebe4","theme_color":"#c8a84e","lang":"zh-CN","icons":[{"src":"data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 192 192%22><rect width=%22192%22 height=%22192%22 fill=%22%23f0ebe4%22/><circle cx=%2296%22 cy=%2296%22 r=%2284%22 fill=%22%23d4af37%22/><text x=%2250%25%22 y=%2254%25%22 font-size=%22104%22 text-anchor=%22middle%22 fill=%22white%22>☯</text></svg>","sizes":"192x192","type":"image/svg+xml","purpose":"any maskable"},{"src":"data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 512 512%22><rect width=%22512%22 height=%22512%22 fill=%22%23f0ebe4%22/><circle cx=%22256%22 cy=%22256%22 r=%22224%22 fill=%22%23d4af37%22/><text x=%2250%25%22 y=%2256%25%22 font-size=%22280%22 text-anchor=%22middle%22 fill=%22white%22>☯</text></svg>","sizes":"512x512","type":"image/svg+xml","purpose":"any maskable"}]}' />
+    <link rel="manifest" href='data:application/manifest+json;charset=utf-8,{"name":"小六壬 · 速断排盘 V2.2.0","short_name":"小六壬","description":"小六壬排盘 — 速断排盘（V2.2.0 单文件离线版）","start_url":".","display":"standalone","orientation":"portrait","background_color":"#f0ebe4","theme_color":"#c8a84e","lang":"zh-CN","icons":[{"src":"data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 192 192%22><rect width=%22192%22 height=%22192%22 fill=%22%23f0ebe4%22/><circle cx=%2296%22 cy=%2296%22 r=%2284%22 fill=%22%23d4af37%22/><text x=%2250%25%22 y=%2254%25%22 font-size=%22104%22 text-anchor=%22middle%22 fill=%22white%22>☯</text></svg>","sizes":"192x192","type":"image/svg+xml","purpose":"any maskable"},{"src":"data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 512 512%22><rect width=%22512%22 height=%22512%22 fill=%22%23f0ebe4%22/><circle cx=%22256%22 cy=%22256%22 r=%22224%22 fill=%22%23d4af37%22/><text x=%2250%25%22 y=%2256%25%22 font-size=%22280%22 text-anchor=%22middle%22 fill=%22white%22>☯</text></svg>","sizes":"512x512","type":"image/svg+xml","purpose":"any maskable"}]}' />
     <!-- iOS 添加到主屏幕的图标（内联 SVG，离线可用） -->
     <link rel="apple-touch-icon" href='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 180 180%22><rect width=%22180%22 height=%22180%22 rx=%2238%22 fill=%22%23f0ebe4%22/><circle cx=%2290%22 cy=%2290%22 r=%2274%22 fill=%22%23d4af37%22/><text x=%2250%25%22 y=%2255%25%22 font-size=%2296%22 text-anchor=%22middle%22 fill=%22white%22>☯</text></svg>' />
 </head>
@@ -2229,12 +2229,12 @@
         <span id="toastMessage">已复制到剪贴板</span>
     </div>
 
-        <!-- ===== V2.2 工程化：农历库（src/core/lunar.js · ~419 KB）===== -->
+        <!-- ===== V2.2 工程化：农历库（src/core/lunar.js · 约 434 KB）===== -->
     <script>
 /**
  * 农历库（lunar-javascript 权威库）
  * 来源：V2.1.2 第一个 <script> 块
- * 大小：~419 KB
+ * 大小：约 434 KB
  * 暴露：window.Lunar  等全局命名空间（由原库自行定义）
  */
 
@@ -10781,8 +10781,7 @@
 </script>
 
 
-    <!-- ===== V2.2 工程化：应用代码整体（src/app-all.js · ~142 KB，后续可细拆为子模块）===== -->
-    <!-- ===== V2.2 工程化：app-all.js 已拆分为 8 个子模块，按依赖顺序加载（共享 Script scope）===== -->
+    <!-- ===== V2.2 工程化：应用代码拆分为 12 个模块，按依赖顺序加载（共享 Script scope，顺序不可变）===== -->
     <script>
 // =========================================================
 // 排盘核心：六宫基础数据 + 知识常量（SHEN/QIN/XING/COMBOS）+ 起卦函数（农历/六神/江氏派/解卦）
@@ -10806,7 +10805,7 @@
                 '速喜': '喜事临门，快速达成',
                 '赤口': '口舌是非，谨慎行事',
                 '小吉': '小有吉利，渐进成功',
-                '空亡': '事多落空，需防损失'
+                '空亡': '谋事落空，徒劳无功'
             };
             var SHEN_DETAIL = {
                 '大安': '五行属木，东方，青龙，主数1、5、7',
@@ -10834,17 +10833,17 @@
                 { name: '勾陈', desc: '主勾连、阻滞、旧事、拖延、牵连。' },
                 { name: '白虎', desc: '主凶灾、血光、压力、疾病、刑伤。' },
                 { name: '玄武', desc: '主暗昧、盗贼、暧昧、小人、隐藏。' },
-                { name: '螣蛇', desc: '主虚惊、多疑、缠绕、梦魇、幻象。' }
+                { name: '腾蛇', desc: '主虚惊、多疑、缠绕、梦魇、幻象。' }
             ];
 
             // 六星知识
             var XING_KNOWLEDGE = [
-                { name: '木', desc: '主生机、扩张、生长，宜积极进取。' },
-                { name: '火', desc: '主急躁、快速、火爆，宜速战速决。' },
-                { name: '土', desc: '主迟缓、稳定、厚重，宜耐心等待。' },
-                { name: '金', desc: '主果断、变革、刚毅，宜果断决策。' },
-                { name: '水', desc: '主智慧、流动、变通，宜灵活应变。' },
-                { name: '天', desc: '主虚无、落空、幻想，宜保守观望。' }
+                { name: '木星', desc: '主生机、扩张、生长，宜积极进取。' },
+                { name: '火星', desc: '主急躁、快速、火爆，宜速战速决。' },
+                { name: '土星', desc: '主迟缓、稳定、厚重，宜耐心等待。' },
+                { name: '金星', desc: '主果断、变革、刚毅，宜果断决策。' },
+                { name: '水星', desc: '主智慧、流动、变通，宜灵活应变。' },
+                { name: '天星', desc: '主虚无、落空、幻想，宜保守观望。' }
             ];
 
             // ===== 五行与地支 =====
@@ -10866,8 +10865,8 @@
             var YIN_DZ = ['丑', '卯', '巳', '未', '酉', '亥'];
 
             // ===== 六神顺序 =====
-            var LIU_SHEN_NAMES = ['青龙', '朱雀', '勾陈', '白虎', '玄武', '螣蛇'];
-            const LIU_XING_NAMES = ['木', '火', '土', '金', '水', '天'];
+            var LIU_SHEN_NAMES = ['青龙', '朱雀', '勾陈', '白虎', '玄武', '腾蛇'];
+            const LIU_XING_NAMES = ['木星', '火星', '土星', '金星', '水星', '天星'];
 
             // ===== 组合断语（完整） =====
             var COMBOS = [
@@ -11303,13 +11302,13 @@
                 else if (shen === '勾陈') parts.push('勾陈主勾连、阻滞、旧事，临此宫多主牵连与拖延。');
                 else if (shen === '白虎') parts.push('白虎主凶灾、血光、压力，临此宫需防范意外。');
                 else if (shen === '玄武') parts.push('玄武主暗昧、盗贼、暧昧，临此宫需防小人暗算。');
-                else if (shen === '螣蛇') parts.push('螣蛇主虚惊、多疑、缠绕，临此宫需放宽心态。');
-                if (xing === '木') parts.push('木星主生机、扩张，宜积极进取。');
-                else if (xing === '火') parts.push('火星主急躁、快速，宜速战速决。');
-                else if (xing === '土') parts.push('土星主迟缓、稳定，宜耐心等待。');
-                else if (xing === '金') parts.push('金星主果断、变革，宜果断决策。');
-                else if (xing === '水') parts.push('水星主智慧、流动，宜灵活应变。');
-                else if (xing === '天') parts.push('天空主虚无、落空，宜保守观望。');
+                else if (shen === '腾蛇') parts.push('螣蛇主虚惊、多疑、缠绕，临此宫需放宽心态。');
+                if (xing === '木星') parts.push('木星主生机、扩张，宜积极进取。');
+                else if (xing === '火星') parts.push('火星主急躁、快速，宜速战速决。');
+                else if (xing === '土星') parts.push('土星主迟缓、稳定，宜耐心等待。');
+                else if (xing === '金星') parts.push('金星主果断、变革，宜果断决策。');
+                else if (xing === '水星') parts.push('水星主智慧、流动，宜灵活应变。');
+                else if (xing === '天星') parts.push('天空主虚无、落空，宜保守观望。');
                 if (parts.length === 0) return '此卦信息不足，请重新起卦。';
                 return parts.join(' ');
             }
@@ -12066,11 +12065,14 @@ var XiaoliurenDomain = function(exports) {
     const ren = rows[2];
     const startGongName = getDaoStartGongName(shiChen);
     return [
-      `【道传·死活六神】时辰「${shiChen}」，青龙起于「${startGongName}」。`,
-      `人宫落${ren.gong}（五行${ren.gongWx}）：`,
+      "【道传·死活六神双轨合参】",
+      `时辰「${shiChen}」→ 青龙起于「${startGongName}」（活六神轮值起点）。`,
+      `地支排法：以人宫时辰「${shiChen}」为基准，顺时针隔位相排。`,
+      `人宫落${ren.gong}（五行${ren.gongWx}，地支${ren.dz}）：`,
       `死六神「${ren.siShen}」${ren.siShenWx}（${ren.siShenDesc}）；`,
       `活六神「${ren.huoShen}」（${ren.huoShenDesc}）；`,
-      `六亲为${ren.qin}（${ren.qinDesc}）。`
+      `六亲为${ren.qin}（${ren.qinDesc}）。`,
+      "死神为体（事之本），活神为用（时之机），双轨合参断事理。"
     ].join("");
   }
   exports.calculate = calculate;
@@ -12166,9 +12168,8 @@ var XiaoliurenDomain = function(exports) {
 /**
  * 统一排盘提示词基线。
  *
- * 无 DOM、无存储、无网络依赖。“AI解析”复制单盘提示词时使用；标准/极简由
- * 同一个 Vite 入口加载。保留全局注册形式供历史 Script 适配测试，不代表仍有
- * 两套运行页面。一键合参请求由同目录 analysis-prompt.js 维护。
+ * 无 DOM、无存储、无网络依赖。“AI解析”复制单盘提示词时使用；按当前排盘模式
+ * （古法 / 江氏 / 道传）生成对应请求。保留全局注册形式供经典 <script> 加载。
  */
 (function registerCanonicalPrompts(root) {
   'use strict';
@@ -12270,7 +12271,7 @@ var XiaoliurenDomain = function(exports) {
 'use strict';
 
 // ===== safeLS: localStorage 安全包装（file:// 下 LS 可能被禁用，所有调用走这里）=====
-// V2.2.1：记录最近一次底层异常（lastError），供 detectLSAvailability 区分「禁用(Security)/配额不足(Quota)」
+// V2.2：记录最近一次底层异常（lastError），用于诊断「禁用(Security)/配额不足(Quota)」
 var safeLS = (function() {
     var _ls = null;
     var _lastError = null;
@@ -12410,13 +12411,9 @@ console.log('[V2.2-fix] safeLS 初始化 | LS 可用=' + safeLS.isAvailable() + 
             var shenRefGrid2 = document.getElementById('shenRefGrid2');
             var xingRefGrid = document.getElementById('xingRefGrid');
 
-            // 更多菜单 DOM
+            // 更多菜单 DOM（弹窗引用由 more.js 自行懒加载）
             var moreBtn = document.getElementById('moreBtn');
             var moreMenu = document.getElementById('moreMenu');
-            var moreModalMask = document.getElementById('moreModalMask');
-            var moreModalClose = document.getElementById('moreModalClose');
-            var moreModalBody = document.getElementById('moreModalBody');
-            var moreModalTitle = document.getElementById('moreModalTitle');
 
             // 进阶排盘面板
             var advancedPanel = document.getElementById('advancedPanel');
@@ -12589,7 +12586,7 @@ console.log('[V2.2-fix] safeLS 初始化 | LS 可用=' + safeLS.isAvailable() + 
                             alert('文件内容为空。'); return;
                         }
                         var raw = JSON.parse(rawText);
-                        var imported, importMeta;
+                        var imported;
                         // 兼容四种格式（按优先级）：
                         // 1) V3.0 信封：{ version, history, customTemplates }
                         // 2) V2.2.1 信封：{ version: "2.2", history }
@@ -12598,19 +12595,15 @@ console.log('[V2.2-fix] safeLS 初始化 | LS 可用=' + safeLS.isAvailable() + 
                         if (raw && typeof raw === 'object' && !Array.isArray(raw)) {
                             if (Array.isArray(raw.history)) {
                                 imported = raw.history;
-                                importMeta = { version: raw.version || 'unknown', hasTemplates: !!raw.customTemplates };
                             } else if (Array.isArray(raw.records)) {
                                 imported = raw.records;
-                                importMeta = { version: raw.version || 'unknown', hasTemplates: false };
                             } else if (Array.isArray(raw.data)) {
                                 imported = raw.data;
-                                importMeta = { version: raw.version || 'unknown', hasTemplates: false };
                             } else {
                                 alert('JSON 格式错误：未找到 history/records/data 数组。'); return;
                             }
                         } else if (Array.isArray(raw)) {
                             imported = raw;
-                            importMeta = { version: 'unknown', hasTemplates: false };
                         } else {
                             alert('JSON 格式错误：期望为数组或 { history/records/data: [...] } 信封格式。'); return;
                         }
@@ -12707,28 +12700,6 @@ console.log('[V2.2-fix] safeLS 初始化 | LS 可用=' + safeLS.isAvailable() + 
             // P0.7 + P1.2：当前 AI 提示词 key（gupai / jiangshi / daochuan），与排盘模式绑定并持久化
             var currentAIPromptKey = safeLS.getItem('xll_ai_prompt_key') || 'gupai';
 
-            // P0.7：三套 AI 提示词模板（从 V3.0 迁移）
-            var AI_PROMPTS = {
-                gupai: {
-                    id: 'gupai',
-                    name: '古法排盘',
-                    description: '小六壬古法三宫推算，适用ChatGPT、DeepSeek等',
-                    icon: '📜'
-                },
-                jiangshi: {
-                    id: 'jiangshi',
-                    name: '江氏小六壬',
-                    description: '江氏排盘，侧重六亲六神六星分析',
-                    icon: '☯'
-                },
-                daochuan: {
-                    id: 'daochuan',
-                    name: '道传小六壬',
-                    description: '道传体系，死活六神双轨合参 + 六亲分析',
-                    icon: '🔯'
-                }
-            };
-
             function loadCustomTemplates() {
                 try { return JSON.parse(safeLS.getItem(_tkey()) || '{}'); } catch { return {}; }
             }
@@ -12775,7 +12746,7 @@ console.log('[V2.2-fix] safeLS 初始化 | LS 可用=' + safeLS.isAvailable() + 
                 }, 3000);
             }
 
-            function fallbackCopy(text) {
+            function fallbackCopy(text, successMessage) {
                 const textarea = document.createElement('textarea');
                 textarea.value = text;
                 textarea.style.position = 'fixed';
@@ -12785,7 +12756,7 @@ console.log('[V2.2-fix] safeLS 初始化 | LS 可用=' + safeLS.isAvailable() + 
                 textarea.select();
                 try {
                     document.execCommand('copy');
-                    showToast('已复制到剪贴板，请粘贴到AI工具中', '📋');
+                    showToast(successMessage || '已复制到剪贴板，请粘贴到AI工具中', '📋');
                 } catch (e) {
                     alert('复制失败，请手动复制以下内容：\n\n' + text);
                 }
@@ -13513,33 +13484,17 @@ function openMoreModal(title, htmlContent) {
                     navigator.clipboard.writeText(text).then(function() {
                         showToast('已复制：' + text, 'success');
                     }).catch(function() {
-                        fallbackCopy(text);
+                        fallbackCopy(text, '已复制：' + text);
                     });
                 } else {
-                    fallbackCopy(text);
+                    fallbackCopy(text, '已复制：' + text);
                 }
             } catch (e) {
-                fallbackCopy(text);
+                fallbackCopy(text, '已复制：' + text);
             }
         });
         el.style.cursor = 'pointer';
     });
-}
-
-function fallbackCopy(text) {
-    try {
-        var ta = document.createElement('textarea');
-        ta.value = text;
-        ta.style.position = 'fixed';
-        ta.style.opacity = '0';
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand('copy');
-        document.body.removeChild(ta);
-        showToast('已复制：' + text, 'success');
-    } catch (e) {
-        showToast('复制失败，请手动选择文本复制', 'error');
-    }
 }
 
 function closeMoreModal() {
@@ -14024,8 +13979,8 @@ bindMoreUI();
 // =========================================================
 'use strict';
 
-// ===== V2.2.1-fix 版本标记（方便用户确认加载的是最新版）=====
-console.log('[小六壬] V2.2.1-fix4 loaded @ ' + new Date().toISOString());
+// ===== V2.2.0 版本标记（方便用户确认加载的是最新版）=====
+console.log('[小六壬] V2.2.0 loaded @ ' + new Date().toISOString());
 
 /**
  * V2.1.2 应用代码（整块整体迁移至 V2.2，保证 1:1 逻辑/UI 不变）
@@ -14194,9 +14149,11 @@ console.log('[小六壬] V2.2.1-fix4 loaded @ ' + new Date().toISOString());
                     } catch (_e) { console.error('[V2.2-fix] init: ' + label + ' 绑定失败:', _e); }
                 }
 
-                // 初始化：始终从古法模式开始，进阶面板默认隐藏
-                try { switchDivinationMode('gufa', true); }
-                catch (_e) { console.warn('[V2.2-fix] 模式初始化失败:', _e); }
+                // 初始化：恢复上次使用的排盘模式（默认古法）；V2.1.2 不持久化，本版为行为修复
+                try {
+                    var _initMode = (currentDivinationMode === 'jiang' || currentDivinationMode === 'daochuan') ? currentDivinationMode : 'gufa';
+                    switchDivinationMode(_initMode, true);
+                } catch (_e) { console.warn('[V2.2-fix] 模式初始化失败:', _e); }
 
                 // 初始禁用进阶排盘和 AI 解析（需先完成推算）
                 if (jiangBtn) { jiangBtn.disabled = true; jiangBtn.classList.add('btn-disabled'); }
@@ -14267,7 +14224,7 @@ console.log('[小六壬] V2.2.1-fix4 loaded @ ' + new Date().toISOString());
             }
 
             window.addEventListener('DOMContentLoaded', init);
-            console.log('小六壬 · 速断排盘 V2.1.2 已加载（农历采用 lunar-javascript 权威库，数据源：紫金山天文台 GB/T 33661-2017）');
+            console.log('小六壬 · 速断排盘 V2.2.0 已加载（农历采用 lunar-javascript 权威库，数据源：紫金山天文台 GB/T 33661-2017）');
 </script>
 
     <!-- ===== 更多菜单：鸣谢 / 联系 / 打赏 弹窗 ===== -->

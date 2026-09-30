@@ -4,8 +4,8 @@
 // =========================================================
 'use strict';
 
-// ===== V2.2.1-fix 版本标记（方便用户确认加载的是最新版）=====
-console.log('[小六壬] V2.2.1-fix4 loaded @ ' + new Date().toISOString());
+// ===== V2.2.0 版本标记（方便用户确认加载的是最新版）=====
+console.log('[小六壬] V2.2.0 loaded @ ' + new Date().toISOString());
 
 /**
  * V2.1.2 应用代码（整块整体迁移至 V2.2，保证 1:1 逻辑/UI 不变）
@@ -174,9 +174,11 @@ console.log('[小六壬] V2.2.1-fix4 loaded @ ' + new Date().toISOString());
                     } catch (_e) { console.error('[V2.2-fix] init: ' + label + ' 绑定失败:', _e); }
                 }
 
-                // 初始化：始终从古法模式开始，进阶面板默认隐藏
-                try { switchDivinationMode('gufa', true); }
-                catch (_e) { console.warn('[V2.2-fix] 模式初始化失败:', _e); }
+                // 初始化：恢复上次使用的排盘模式（默认古法）；V2.1.2 不持久化，本版为行为修复
+                try {
+                    var _initMode = (currentDivinationMode === 'jiang' || currentDivinationMode === 'daochuan') ? currentDivinationMode : 'gufa';
+                    switchDivinationMode(_initMode, true);
+                } catch (_e) { console.warn('[V2.2-fix] 模式初始化失败:', _e); }
 
                 // 初始禁用进阶排盘和 AI 解析（需先完成推算）
                 if (jiangBtn) { jiangBtn.disabled = true; jiangBtn.classList.add('btn-disabled'); }
@@ -247,4 +249,4 @@ console.log('[小六壬] V2.2.1-fix4 loaded @ ' + new Date().toISOString());
             }
 
             window.addEventListener('DOMContentLoaded', init);
-            console.log('小六壬 · 速断排盘 V2.1.2 已加载（农历采用 lunar-javascript 权威库，数据源：紫金山天文台 GB/T 33661-2017）');
+            console.log('小六壬 · 速断排盘 V2.2.0 已加载（农历采用 lunar-javascript 权威库，数据源：紫金山天文台 GB/T 33661-2017）');

@@ -17,7 +17,7 @@
                 }, 3000);
             }
 
-            function fallbackCopy(text) {
+            function fallbackCopy(text, successMessage) {
                 const textarea = document.createElement('textarea');
                 textarea.value = text;
                 textarea.style.position = 'fixed';
@@ -27,7 +27,7 @@
                 textarea.select();
                 try {
                     document.execCommand('copy');
-                    showToast('已复制到剪贴板，请粘贴到AI工具中', '📋');
+                    showToast(successMessage || '已复制到剪贴板，请粘贴到AI工具中', '📋');
                 } catch (e) {
                     alert('复制失败，请手动复制以下内容：\n\n' + text);
                 }
