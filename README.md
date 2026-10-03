@@ -1,7 +1,7 @@
 # 小六壬排盘 V2.2（简洁兼容版）
 
 > **状态：已归档（2026-09-28）**——只读对照用途，仅接受安全与正确性修复；不新增功能、不跟进 V3。详见 [归档说明](归档说明.md)。
-> 来源：由主项目 [`serried-ranges/xiaoliuren`](https://github.com/serried-ranges/xiaoliuren) 的 `xiaoliuren-v2.2/` 目录迁移（快照提交 `ef750b9`，2026-09-28）。迁移后独立维护，**不自动同步**。
+> 来源：由主项目 [`serried-ranges/xiaoliuren`](https://github.com/serried-ranges/xiaoliuren) 的 `xiaoliuren-v2.2/` 目录迁移（快照提交 `ef750b9`，2026-09-28）。迁移后独立维护，**不随主项目自动同步**。
 > 许可：本仓库新增内容按 [LICENSE](LICENSE)（BSD 3-Clause）；派生自主项目的部分保留原 MIT 许可，见 [LICENSE-MIT](LICENSE-MIT)。
 > 门禁：独立 CI（`.github/workflows/ci.yml`）：`npm ci → check → check:docs → test:all → test:compat → build → build:protected → test:protected`。每次提交前可照此逐条本地复跑（见[接手与重启](文档/治理/接手与重启.md)）。
 
@@ -15,8 +15,26 @@
 | **AtomGit** | 🟡 备份从库 | https://atomgit.com/serried-ranges/xiaoliuren-v2.2 |
 | **Gitee** | 🟡 备份从库 | https://gitee.com/serried-ranges/xiaoliuren-v2.2 |
 
-> ⚠️ 如需提 Issue / PR，请统一前往 GitHub 主仓库。
-> 备份仓库由本地多 push URL 与 GitHub Actions 自动镜像同步，仅作代码镜像与国内加速访问用途；请勿在备份仓库直接提交。
+**同步机制（双保险）**：
+
+1. 本地 `origin` 配置 3 个 push URL：一条 `git push` 按 GitHub → Gitee → AtomGit 顺序推送三仓；
+2. GitHub Actions（`.github/workflows/mirror.yml`）在 `main` 更新时自动强制镜像两个备份，兜底补齐漏推；
+3. 备份仓库仅作代码镜像与国内加速访问，**请勿在备份仓库直接提交**；Issue / PR 统一前往 GitHub 主仓库。
+
+**常用命令**：
+
+```powershell
+git push                                                      # 日常推送：一条命令推三仓，并触发自动镜像兜底
+git pull                                                      # 从 GitHub 主仓库拉取更新
+git fetch --all                                               # 拉取三仓引用
+git rev-parse origin/main backup-gitee/main backup-atom/main  # 校验三仓一致（三行输出应为同一 commit）
+
+git push backup-atom main                                     # 单独补推 AtomGit
+git push backup-gitee main                                    # 单独补推 Gitee
+git pull backup-atom main                                     # GitHub 不可用时，从备份仓库恢复
+```
+
+> 完整方案、排错与迁移步骤见主项目[《多仓库托管与自动镜像操作指南》](https://github.com/serried-ranges/xiaoliuren/blob/main/文档/治理/多仓库托管与自动镜像操作指南.md)。
 
 ## 这是什么
 
