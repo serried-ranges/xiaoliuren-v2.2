@@ -5,6 +5,19 @@
 > 许可：本仓库新增内容按 [LICENSE](LICENSE)（BSD 3-Clause）；派生自主项目的部分保留原 MIT 许可，见 [LICENSE-MIT](LICENSE-MIT)。
 > 门禁：独立 CI（`.github/workflows/ci.yml`）：`npm ci → check → check:docs → test:all → test:compat → build → build:protected → test:protected`。每次提交前可照此逐条本地复跑（见[接手与重启](文档/治理/接手与重启.md)）。
 
+## 🪞 多仓库镜像同步说明
+
+本仓库采用 **一主两备** 架构托管：
+
+| 平台 | 角色 | 仓库地址 |
+|---|---|---|
+| **GitHub** | 🟢 主仓库 | https://github.com/serried-ranges/xiaoliuren-v2.2 |
+| **AtomGit** | 🟡 备份从库 | https://atomgit.com/serried-ranges/xiaoliuren-v2.2 |
+| **Gitee** | 🟡 备份从库 | https://gitee.com/serried-ranges/xiaoliuren-v2.2 |
+
+> ⚠️ 如需提 Issue / PR，请统一前往 GitHub 主仓库。
+> 备份仓库由本地多 push URL 与 GitHub Actions 自动镜像同步，仅作代码镜像与国内加速访问用途；请勿在备份仓库直接提交。
+
 ## 这是什么
 
 V2.2 是 V3 之前的「简洁版」与历史兼容基线：外链 `<script>` 模块化（非 ES Module，`file://` 直接可用），保留三种排盘（古法 / 江氏 / 道传）、3 套 AI 提示词模板、历史记录与反馈。

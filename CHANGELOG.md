@@ -2,6 +2,13 @@
 
 > 本仓库的独立变更日志，最新在上。迁仓前的历史见主项目 [`serried-ranges/xiaoliuren`](https://github.com/serried-ranges/xiaoliuren) 的 CHANGELOG 与 `历史记录/`。
 
+## [2026-10-03] — 一主两备托管：多 push URL + GitHub Actions 自动镜像
+
+- 仓库托管升级为 **一主两备**：GitHub 主仓库 + AtomGit / Gitee 备份从库（与主项目 `xiaoliuren` 同构）；
+- 本地 `origin` 配置 3 个 push URL：一条 `git push` 同时推三仓；`backup-atom` / `backup-gitee` 用于独立拉取与故障恢复；
+- 新增 `.github/workflows/mirror.yml`：推送 `main` 时自动强同步两备份（需在仓库 Secrets 配置 `MIRROR_SSH_PRIVATE_KEY`）；
+- README 顶部新增「多仓库镜像同步说明」；本次不改变运行时行为与产物。
+
 ## [2026-10-01] — 待办修复批：模式持久化、数据口径统一、PWA 名称与测试补充
 
 - **模式持久化修复**：`src/main.js` 初始化读取并恢复上次排盘模式（默认古法）；浏览器实测江氏 / 道传 / 古法往返刷新保持，AI 提示词 key 联动；
