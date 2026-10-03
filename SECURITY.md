@@ -2,7 +2,7 @@
 
 ## 报告问题
 
-请通过本仓库的 Issues 报告安全问题；若涉及敏感细节，可先只描述影响范围，等待维护者提供私下渠道。
+请通过 GitHub 主仓库 [serried-ranges/xiaoliuren-v2.2](https://github.com/serried-ranges/xiaoliuren-v2.2) 的 Issues 报告安全问题；AtomGit / Gitee 为只读镜像，不接收提交与 Issue。若涉及敏感细节，可先只描述影响范围，等待维护者提供私下渠道。
 
 ## 范围与承诺
 
