@@ -2,3 +2,7 @@ node_modules/
 *.log
 .DS_Store
 Thumbs.db
+
+# IDE / 编辑器本地配置（不纳入版本管理）
+.idea/
+.vs/
