@@ -67,6 +67,7 @@ npm run test:protected  # 验证受保护发布包（8 条断言）
 
 - 数据全部保存在浏览器本地存储，按身份命名空间隔离；键名、V3 导入与备份口径见 [数据兼容与迁移](docs/数据兼容与迁移.md)；
 - 纯本地应用：应用自身不发起网络请求、不收集或上传数据、不含任何密钥；唯一外跳为「更多 → 切换标准」主动跳转 V3 站点（`x6ren.cn`）；
+- 导入安全：用户输入与导入数据在渲染前统一 HTML 转义，可疑 JSON 不会执行脚本；仍建议只导入自己或可信来源的备份文件；
 - 不发布到资料站：网页发布源只有主项目的 V3（`x6ren.cn`）；
 - 已知行为差异与待办见[文档/治理/待办事项与方案进度.md](文档/治理/待办事项与方案进度.md)。
 
@@ -90,6 +91,7 @@ history/ V2.1 / V2.2 历史资料（非当前操作指南）
 | 本地键名与导入导出 | [docs/数据兼容与迁移.md](docs/数据兼容与迁移.md) |
 | 历史归档 | [history/README.md](history/README.md) |
 | 变更 / 安全 / 贡献 | [CHANGELOG.md](CHANGELOG.md) ｜ [SECURITY.md](SECURITY.md) ｜ [CONTRIBUTING.md](CONTRIBUTING.md) |
+| 许可与第三方声明 | [LICENSE](LICENSE) ｜ [LICENSE-MIT](LICENSE-MIT) ｜ [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) |
 
 ## 共同口径（三项目一致）
 
