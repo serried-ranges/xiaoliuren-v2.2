@@ -1,9 +1,19 @@
 // =========================================================
-// DOM 工具：showToast（顶部 Toast 提示） + fallbackCopy（剪贴板 fallback）
+// DOM 工具：showToast（顶部 Toast 提示） + fallbackCopy（剪贴板 fallback） + escapeHtml（HTML 转义）
 // （从 V2.1.2 app-all.js 物理切分，保持 1:1 逻辑不变；去 IIFE 后共享 Script scope）
 // =========================================================
 'use strict';
 
+
+            // ===== HTML 转义：凡来自用户输入 / 导入数据的字符串，拼入 innerHTML 前必须经过这里 =====
+            function escapeHtml(value) {
+                return String(value == null ? '' : value)
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#39;');
+            }
 
             // ===== Toast 函数 =====
             function showToast(msg, icon) {

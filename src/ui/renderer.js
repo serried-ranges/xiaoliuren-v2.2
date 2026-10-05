@@ -8,7 +8,7 @@
             function renderGuFa(answers, finalShen, timestamp) {
                 const shenItems = answers.map((item, index) => {
                     const s = item.shen;
-                    let html = `<span class="shen-item ${s.cls}">${s.name}</span>`;
+                    let html = `<span class="shen-item ${escapeHtml(s.cls)}">${escapeHtml(s.name)}</span>`;
                     if (index < answers.length - 1) html += `<span class="arrow">→</span>`;
                     return html;
                 }).join('');
@@ -36,14 +36,14 @@
                 jiangInfo.innerHTML = `
                     <div class="item"><span class="label">起卦时间</span><span class="value">${formatTime(timestamp)}</span></div>
                     <div class="item"><span class="label">当前时辰</span><span class="value">${shiChenDz}时</span></div>
-                    <div class="item"><span class="label">农历</span><span class="value lunar-clickable" style="cursor:pointer;border-bottom:1px dashed #c8a84e;" title="${lunarPlain}&#10;点击查看排盘逻辑">${lunarChinese}</span></div>
-                    <div class="item"><span class="label">落点</span><span class="value"><span class="tag ${finalShen.cls}">${finalShen.name}</span> ${finalShen.meaning}</span></div>
+                    <div class="item"><span class="label">农历</span><span class="value lunar-clickable" style="cursor:pointer;border-bottom:1px dashed #c8a84e;" title="${escapeHtml(lunarPlain)}&#10;点击查看排盘逻辑">${escapeHtml(lunarChinese)}</span></div>
+                    <div class="item"><span class="label">落点</span><span class="value"><span class="tag ${escapeHtml(finalShen.cls)}">${escapeHtml(finalShen.name)}</span> ${escapeHtml(finalShen.meaning)}</span></div>
                     <div class="item"><span class="label">三宫</span><span class="value">
-                        <span class="tag tag-tian">${tianGongName}</span> → 
-                        <span class="tag tag-di">${diGongName}</span> → 
-                        <span class="tag tag-ren">${renGongName}</span>
+                        <span class="tag tag-tian">${escapeHtml(tianGongName)}</span> → 
+                        <span class="tag tag-di">${escapeHtml(diGongName)}</span> → 
+                        <span class="tag tag-ren">${escapeHtml(renGongName)}</span>
                     </span></div>
-                    ${question ? `<div class="item" style="grid-column:1/-1;"><span class="label">问念</span><span class="value">${question}</span></div>` : ''}
+                    ${question ? `<div class="item" style="grid-column:1/-1;"><span class="label">问念</span><span class="value">${escapeHtml(question)}</span></div>` : ''}
                 `;
 
                 const lunarEl = jiangInfo.querySelector('.lunar-clickable');
@@ -60,7 +60,7 @@
                     const isTian = item.gong === tianGongName;
                     const isDi = item.gong === diGongName;
 
-                    let rowCls = `row-${SHEN_CLS[item.gong]}`;
+                    let rowCls = `row-${SHEN_CLS[item.gong] || ''}`;
                     let highlightCls = '';
                     if (isTian) highlightCls += ' highlight-tian';
                     if (isDi) highlightCls += ' highlight-di';
@@ -82,18 +82,19 @@
                         markStr = ` <span class="${cls}">${marks[0].label}</span>`;
                     }
 
-                    const gongTag = `<span class="tag ${SHEN_CLS[item.gong]}">${item.gong}</span>`;
-                    const qinCls = item.qin ? `tag-qin ${SHEN_CLS[item.gong]}` : '';
-                    const qinTag = item.qin ? `<span class="${qinCls}">${item.qin}</span>` : '—';
-                    const shenCls = item.shen ? `tag-shen ${SHEN_CLS[item.gong]}` : '';
-                    const shenTag = item.shen ? `<span class="${shenCls}">${item.shen}</span>` : '—';
-                    const xingCls = item.xing ? `tag-xing ${SHEN_CLS[item.gong]}` : '';
-                    const xingTag = item.xing ? `<span class="${xingCls}">${item.xing}</span>` : '—';
+                    const gongCls = SHEN_CLS[item.gong] || '';
+                    const gongTag = `<span class="tag ${gongCls}">${escapeHtml(item.gong)}</span>`;
+                    const qinCls = item.qin ? `tag-qin ${gongCls}` : '';
+                    const qinTag = item.qin ? `<span class="${qinCls}">${escapeHtml(item.qin)}</span>` : '—';
+                    const shenCls = item.shen ? `tag-shen ${gongCls}` : '';
+                    const shenTag = item.shen ? `<span class="${shenCls}">${escapeHtml(item.shen)}</span>` : '—';
+                    const xingCls = item.xing ? `tag-xing ${gongCls}` : '';
+                    const xingTag = item.xing ? `<span class="${xingCls}">${escapeHtml(item.xing)}</span>` : '—';
 
                     tbody += `
                         <tr class="${rowCls}${highlightCls}">
                             <td>${gongTag}${markStr}</td>
-                            <td>${item.dz}</td>
+                            <td>${escapeHtml(item.dz)}</td>
                             <td>${qinTag}</td>
                             <td>${shenTag}</td>
                             <td>${xingTag}</td>
@@ -122,14 +123,14 @@
                 daoInfo.innerHTML = `
                     <div class="item"><span class="label">起卦时间</span><span class="value">${formatTime(timestamp)}</span></div>
                     <div class="item"><span class="label">当前时辰</span><span class="value">${shiChenDz}时</span></div>
-                    <div class="item"><span class="label">农历</span><span class="value lunar-clickable" style="cursor:pointer;border-bottom:1px dashed #7b1fa2;" title="${lunarPlain}&#10;点击查看道传排盘逻辑">${lunarChinese}</span></div>
-                    <div class="item"><span class="label">落点</span><span class="value"><span class="tag ${finalShen.cls}">${finalShen.name}</span> ${finalShen.meaning}</span></div>
+                    <div class="item"><span class="label">农历</span><span class="value lunar-clickable" style="cursor:pointer;border-bottom:1px dashed #7b1fa2;" title="${escapeHtml(lunarPlain)}&#10;点击查看道传排盘逻辑">${escapeHtml(lunarChinese)}</span></div>
+                    <div class="item"><span class="label">落点</span><span class="value"><span class="tag ${escapeHtml(finalShen.cls)}">${escapeHtml(finalShen.name)}</span> ${escapeHtml(finalShen.meaning)}</span></div>
                     <div class="item"><span class="label">三宫</span><span class="value">
-                        <span class="tag tag-tian">${tianGongName}</span> → 
-                        <span class="tag tag-di">${diGongName}</span> → 
-                        <span class="tag tag-ren">${renGongName}</span>
+                        <span class="tag tag-tian">${escapeHtml(tianGongName)}</span> → 
+                        <span class="tag tag-di">${escapeHtml(diGongName)}</span> → 
+                        <span class="tag tag-ren">${escapeHtml(renGongName)}</span>
                     </span></div>
-                    ${question ? `<div class="item" style="grid-column:1/-1;"><span class="label">问念</span><span class="value">${question}</span></div>` : ''}
+                    ${question ? `<div class="item" style="grid-column:1/-1;"><span class="label">问念</span><span class="value">${escapeHtml(question)}</span></div>` : ''}
                 `;
 
                 // 绑定农历点击事件 → 显示道传排盘逻辑弹窗
@@ -146,7 +147,8 @@
                     var isRen = r.position === '人宫';
                     var isTian = r.position === '天宫';
                     var isDi = r.position === '地宫';
-                    var rowCls = 'row-' + SHEN_CLS[r.gong];
+                    var gongCls = SHEN_CLS[r.gong] || '';
+                    var rowCls = 'row-' + gongCls;
                     var highlightCls = '';
                     if (isTian) highlightCls += ' highlight-tian';
                     if (isDi) highlightCls += ' highlight-di';
@@ -156,15 +158,15 @@
                     if (isDi) marks.push('<span class="tag-di">🏷️地</span>');
                     if (isRen) marks.push('<span class="tag-ren">🏷️人</span>');
                     var markStr = marks.length ? ' ' + marks.join(' ') : '';
-                    var gongTag = '<span class="tag ' + SHEN_CLS[r.gong] + '">' + r.gong + '</span>';
-                    var qinTag = r.qin ? '<span class="tag-qin ' + SHEN_CLS[r.gong] + '">' + r.qin + '</span>' : '—';
-                    var siShenTag = r.siShen ? '<span class="tag-shen ' + SHEN_CLS[r.gong] + '">' + r.siShen + '</span>' : '—';
-                    var huoShenTag = r.huoShen ? '<span class="tag-xing ' + SHEN_CLS[r.gong] + '">' + r.huoShen + '</span>' : '—';
+                    var gongTag = '<span class="tag ' + gongCls + '">' + escapeHtml(r.gong) + '</span>';
+                    var qinTag = r.qin ? '<span class="tag-qin ' + gongCls + '">' + escapeHtml(r.qin) + '</span>' : '—';
+                    var siShenTag = r.siShen ? '<span class="tag-shen ' + gongCls + '">' + escapeHtml(r.siShen) + '</span>' : '—';
+                    var huoShenTag = r.huoShen ? '<span class="tag-xing ' + gongCls + '">' + escapeHtml(r.huoShen) + '</span>' : '—';
                     tbody += `
                         <tr class="${rowCls}${highlightCls}">
                             <td>${r.position}</td>
                             <td>${gongTag}${markStr}</td>
-                            <td>${r.dz}</td>
+                            <td>${escapeHtml(r.dz)}</td>
                             <td>${qinTag}</td>
                             <td>${siShenTag}</td>
                             <td>${huoShenTag}</td>
@@ -266,9 +268,8 @@
                 }
                 let html = '';
                 records.forEach(rec => {
-                    const fs = rec.finalShen;
-                    const nums = rec.numbers.join('、');
-                    const ansNames = rec.answers.map(a => a.shen.name).join(' · ');
+                    const nums = (rec.numbers || []).map(n => escapeHtml(n)).join('、');
+                    const ansNames = (rec.answers || []).map(a => escapeHtml(a && a.shen ? a.shen.name : '')).join(' · ');
                     const timeStr = formatTime(rec.timestamp);
                     const question = rec.question || '';
                     const method = rec.method || 'manual';
@@ -283,12 +284,14 @@
                     if (mode === 'jiang') { modeLabel = '江氏'; modeCls = 'mode-jiang'; }
                     else if (mode === 'daochuan') { modeLabel = '道传'; modeCls = 'mode-dao'; }
                     const fb = rec.feedback;
-                    const fbTitle = fb ? ('已有反馈：' + fb.rating + '星' + (fb.content ? ' · ' + fb.content.slice(0, 40) : '')) : '';
-                    const fbBadge = fb ? `<span class="fb-badge" title="${fbTitle.replace(/&/g, '&amp;').replace(/"/g, '&quot;')}">${'★'.repeat(fb.rating)}</span>` : '';
+                    const fbRating = fb ? Math.max(0, Math.min(5, parseInt(fb.rating, 10) || 0)) : 0;
+                    const fbTitle = fbRating ? ('已有反馈：' + fbRating + '星' + (fb && fb.content ? ' · ' + String(fb.content).slice(0, 40) : '')) : '';
+                    const fbBadge = fbRating ? `<span class="fb-badge" title="${escapeHtml(fbTitle)}">${'★'.repeat(fbRating)}</span>` : '';
+                    const recId = escapeHtml(rec.id);
                     html += `
-                        <div class="history-item" data-id="${rec.id}">
-                            <div class="info" data-id="${rec.id}">
-                                ${question ? `<div class="question-line">📝 ${question}</div>` : ''}
+                        <div class="history-item" data-id="${recId}">
+                            <div class="info" data-id="${recId}">
+                                ${question ? `<div class="question-line">📝 ${escapeHtml(question)}</div>` : ''}
                                 <div class="answers-line">${ansNames}${fbBadge}</div>
                                 <div class="meta-line">
                                     <span class="h-nums">${nums}</span>
@@ -298,9 +301,9 @@
                                 <div class="time">${timeStr}</div>
                             </div>
                             <div class="actions">
-                                <button class="fb-btn" data-id="${rec.id}" title="解卦反馈">💬</button>
-                                <button class="edit-btn" data-id="${rec.id}" title="编辑问念">✎</button>
-                                <button class="del-btn" data-id="${rec.id}" title="删除">✕</button>
+                                <button class="fb-btn" data-id="${recId}" title="解卦反馈">💬</button>
+                                <button class="edit-btn" data-id="${recId}" title="编辑问念">✎</button>
+                                <button class="del-btn" data-id="${recId}" title="删除">✕</button>
                             </div>
                         </div>
                     `;

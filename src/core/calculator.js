@@ -444,7 +444,8 @@
                 const isYang = YANG_DZ.includes(shiChenDz);
                 const dzList = isYang ? YANG_DZ : YIN_DZ;
                 let startIdx = dzList.indexOf(shiChenDz);
-                const selfDz = jiangData.find(d => d.gong === renGongName).dz;
+                const selfItem = jiangData.find(d => d.gong === renGongName) || {};
+                const selfDz = selfItem.dz || '';
                 const selfWx = DZ_WUXING[selfDz];
                 const sheng = { '木': '火', '火': '土', '土': '金', '金': '水', '水': '木' };
                 const ke = { '木': '土', '土': '水', '水': '火', '火': '金', '金': '木' };
@@ -458,10 +459,10 @@
                     html += '<div style="margin-left:13px;">' + SHEN_NAMES[i] + ' ← ' + dzList[(startIdx + i) % 6] + '</div>';
                 }
 
-                html += '<div style="margin-top:8px;margin-bottom:4px;color:#c8a84e;font-weight:600;">▎六亲排法（人宫「' + renGongName + '」地支' + selfDz + '→五行"' + selfWx + '"为自身）</div>';
+                html += '<div style="margin-top:8px;margin-bottom:4px;color:#c8a84e;font-weight:600;">▎六亲排法（人宫「' + escapeHtml(renGongName) + '」地支' + selfDz + '→五行"' + selfWx + '"为自身）</div>';
                 jiangData.forEach(item => {
                     if (item.gong === renGongName) {
-                        html += '<div style="margin-left:13px;">' + item.gong + ' → <b>自身</b></div>';
+                        html += '<div style="margin-left:13px;">' + escapeHtml(item.gong) + ' → <b>自身</b></div>';
                     } else {
                         let wx = DZ_WUXING[item.dz];
                         let rel = '';
@@ -470,7 +471,7 @@
                         else if (sheng[wx] === selfWx) rel = wx + '生' + selfWx + '→父母';
                         else if (ke[selfWx] === wx) rel = selfWx + '克' + wx + '→妻财';
                         else if (ke[wx] === selfWx) rel = wx + '克' + selfWx + '→官鬼';
-                        html += '<div style="margin-left:13px;">' + item.gong + ' 地支' + item.dz + '→五行"' + wx + '" → ' + rel + '</div>';
+                        html += '<div style="margin-left:13px;">' + escapeHtml(item.gong) + ' 地支' + item.dz + '→五行"' + wx + '" → ' + rel + '</div>';
                     }
                 });
 
@@ -699,7 +700,7 @@
 
                 // 地支排法
                 html += '<div style="margin-bottom:6px;color:#7b1fa2;font-weight:600;">▎地支排法（隔位相排）</div>';
-                html += '<div style="margin-left:13px;margin-bottom:4px;">以人宫「' + renGongName + '」时辰地支<b>' + shiChenDz + '</b>为基准，顺时针隔一个排一个：</div>';
+                html += '<div style="margin-left:13px;margin-bottom:4px;">以人宫「' + escapeHtml(renGongName) + '」时辰地支<b>' + shiChenDz + '</b>为基准，顺时针隔一个排一个：</div>';
                 for (var i = 0; i < 6; i++) {
                     var offset = (i - renIdx + 6) % 6;
                     var dzIdx = (shiChenIdx + 2 * offset) % 12;
@@ -728,7 +729,7 @@
                 // 六亲排法
                 html += '<div style="margin-top:8px;margin-bottom:4px;color:#7b1fa2;font-weight:600;">▎六亲排法（以人宫五行为"我"）</div>';
                 var renWx = DAO_GONG_WUXING[renIdx];
-                html += '<div style="margin-left:13px;margin-bottom:4px;">人宫「' + renGongName + '」五行=<b>' + renWx + '</b>为自身，其余宫位按五行生克定六亲：</div>';
+                html += '<div style="margin-left:13px;margin-bottom:4px;">人宫「' + escapeHtml(renGongName) + '」五行=<b>' + renWx + '</b>为自身，其余宫位按五行生克定六亲：</div>';
                 var sheng = { '木': '火', '火': '土', '土': '金', '金': '水', '水': '木' };
                 var ke = { '木': '土', '土': '水', '水': '火', '火': '金', '金': '木' };
                 for (var i = 0; i < 6; i++) {

@@ -2,6 +2,14 @@
 
 > 本仓库的独立变更日志，最新在上。迁仓前的历史见主项目 [`serried-ranges/xiaoliuren`](https://github.com/serried-ranges/xiaoliuren) 的 CHANGELOG 与 `历史记录/`。
 
+## [2026-10-05] — 安全加固与许可合规：导入链路 HTML 转义 + lunar-javascript MIT 署名
+
+- **安全修复**：新增统一 `escapeHtml`（`src/utils/dom.js`），结果区 / 历史列表 / 排盘逻辑弹窗在拼接 HTML 前统一转义，修复「导入他人分享的 JSON 可执行脚本」的 XSS 注入面；`tplEscape` 改为复用同一实现；
+- **健壮性**：历史列表对导入的 `id` / `numbers` / `answers` / `feedback` 做防御处理，异常数据不再导致渲染报错；排盘逻辑弹窗对人宫缺失做兜底；
+- **许可合规**：`src/core/lunar.js` 头部恢复 lunar-javascript（MIT · Copyright (c) 2018 6tail）声明；`index.html` 增加第三方许可注释（随构建进入交付物）；新增 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)；README 许可说明同步；
+- **文档**：使用说明补充「导入他人分享的 JSON 前请确认来源」；开发者指南 §4.5 增加导入安全人工验收项；
+- 交付物重建：`dist` 735,606 字节（可由源码复现）、`release` 936,478 字节（字节不可复现）；门禁与测试全部通过。
+
 ## [2026-10-03] — 工程杂项：忽略 IDE 本地配置
 
 - `.gitignore` 增加 `.idea/`、`.vs/`（IDE 本地配置目录），避免误提交；

@@ -2,7 +2,7 @@
 
 > **状态：已归档（2026-09-28）**——只读对照用途，仅接受安全与正确性修复；不新增功能、不跟进 V3。详见 [归档说明](归档说明.md)。
 > 来源：由主项目 [`serried-ranges/xiaoliuren`](https://github.com/serried-ranges/xiaoliuren) 的 `xiaoliuren-v2.2/` 目录迁移（快照提交 `ef750b9`，2026-09-28）。迁移后独立维护，**不随主项目自动同步**。
-> 许可：本仓库新增内容按 [LICENSE](LICENSE)（BSD 3-Clause）；派生自主项目的部分保留原 MIT 许可，见 [LICENSE-MIT](LICENSE-MIT)。
+> 许可：本仓库新增内容按 [LICENSE](LICENSE)（BSD 3-Clause）；派生自主项目的部分保留原 MIT 许可，见 [LICENSE-MIT](LICENSE-MIT)；内嵌第三方库（lunar-javascript）许可见 [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES.md)。
 > 门禁：独立 CI（`.github/workflows/ci.yml`）：`npm ci → check → check:docs → test:all → test:compat → build → build:protected → test:protected`。每次提交前可照此逐条本地复跑（见[接手与重启](文档/治理/接手与重启.md)）。
 
 ## 🪞 多仓库镜像同步说明
@@ -60,8 +60,8 @@ npm run test:protected  # 验证受保护发布包（8 条断言）
 
 | 产物 | 说明 |
 |---|---|
-| `dist/index.html` | 明码单文件，双击即用；可由源码逐字节复现（734,090 字节） |
-| `release/index.html` | 混淆保护版；**只是源码可读性门槛，不是密钥保护**；每次构建字节不同（约 941,000 字节，验证用 `test:protected`） |
+| `dist/index.html` | 明码单文件，双击即用；可由源码逐字节复现（735,606 字节） |
+| `release/index.html` | 混淆保护版；**只是源码可读性门槛，不是密钥保护**；每次构建字节不同（约 936,000 字节，验证用 `test:protected`） |
 
 ## 数据与边界
 

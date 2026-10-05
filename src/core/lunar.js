@@ -3,6 +3,13 @@
  * 来源：V2.1.2 第一个 <script> 块
  * 大小：约 434 KB
  * 暴露：window.Lunar  等全局命名空间（由原库自行定义）
+ *
+ * ---------------------------------------------------------------
+ * 第三方许可（必须保留）：
+ * lunar-javascript — https://github.com/6tail/lunar-javascript
+ * MIT License · Copyright (c) 2018 6tail
+ * 完整声明见仓库根目录 THIRD_PARTY_NOTICES.md
+ * ---------------------------------------------------------------
  */
 
 /* lunar-javascript library embedded V2.1.1 */
