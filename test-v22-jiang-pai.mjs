@@ -1,6 +1,7 @@
 /**
  * V2.2 单元测试：江氏排盘 (jiang-pai)
- * 从 V2.2 src/core/calculator.js 提取可测试逻辑
+ * 从 V2.2 src/core/browser-core.js（运行时核心）与 calculator.js 提取可测试逻辑
+ * 2026-10-05 修正：排地支=自身宫起、排六神=按六神起点表轮转、排六星=自 A 宫起木星
  */
 
 // ===== V2.2 原始逻辑（1:1 提取） =====
@@ -13,14 +14,15 @@ const LIU_XING_NAMES = ['木星', '火星', '土星', '金星', '水星', '天�
 
 function generateJiangPai(answers, shiChenDz) {
     const renGongName = answers[2].shen.name;
+    const renIdx = Math.max(0, SHEN_NAMES.indexOf(renGongName));
     const isYang = YANG_DZ.includes(shiChenDz);
     const dzList = isYang ? YANG_DZ : YIN_DZ;
-    let startIdx = dzList.indexOf(shiChenDz);
-    if (startIdx === -1) startIdx = 0;
+    const startIdx = Math.max(0, dzList.indexOf(shiChenDz));
+    // 排地支：以“自身宫（人宫）”起、落“时辰地支”，按阴/阳序列隔位相排
     let diZhiMap = {};
     for (let i = 0; i < 6; i++) {
         let shenName = SHEN_NAMES[i];
-        diZhiMap[shenName] = dzList[(startIdx + i) % 6];
+        diZhiMap[shenName] = dzList[(startIdx + (i - renIdx) + 12) % 6];
     }
     const selfDz = diZhiMap[renGongName];
     const selfWx = DZ_WUXING[selfDz] || '';
@@ -38,10 +40,15 @@ function generateJiangPai(answers, shiChenDz) {
         else if (ke[wx] === selfWx) qinMap[shenName] = '官鬼';
         else qinMap[shenName] = '';
     }
+    // 排六神：按身宫（人宫）地支查六神起点表，青龙自起点宫起，顺时针轮转
+    const LIU_SHEN_START = { '子': 0, '午': 0, '丑': 1, '未': 1, '寅': 2, '申': 2, '卯': 3, '酉': 3, '辰': 4, '戌': 4, '巳': 5, '亥': 5 };
+    const shenStart = LIU_SHEN_START[shiChenDz] != null ? LIU_SHEN_START[shiChenDz] : 0;
     let shenMap = {};
-    for (let i = 0; i < 6; i++) { shenMap[SHEN_NAMES[i]] = LIU_SHEN_NAMES[i]; }
+    for (let i = 0; i < 6; i++) { shenMap[SHEN_NAMES[i]] = LIU_SHEN_NAMES[(i - shenStart + 6) % 6]; }
+    // 排六星：自 A 宫（第一落宫）起木星，顺时针轮转
+    const aIdx = Math.max(0, answers[0].shen.index);
     let xingMap = {};
-    for (let i = 0; i < 6; i++) { xingMap[SHEN_NAMES[i]] = LIU_XING_NAMES[i]; }
+    for (let i = 0; i < 6; i++) { xingMap[SHEN_NAMES[i]] = LIU_XING_NAMES[(i - aIdx + 6) % 6]; }
     let result = [];
     for (let shenName of SHEN_NAMES) {
         result.push({ gong: shenName, dz: diZhiMap[shenName], qin: qinMap[shenName] || '', shen: shenMap[shenName] || '', xing: xingMap[shenName] || '' });
@@ -102,16 +109,17 @@ function makeAnswers(idx1, idx2, idx3) {
 }
 
 // ==================== 1. 子时排盘 ====================
-console.log('\n【1】子时排盘（5,6,7 → 大安/留连/速喜）');
+console.log('\n【1】子时排盘（5,6,7 → 大安/留连/速喜；人宫=速喜）');
 const ans567 = makeAnswers(0, 1, 2);
 const rowsZi = generateJiangPai(ans567, '子');
 check('子时 6 行', rowsZi.length, 6);
-check('大安地支', rowsZi[0].dz, '子');
-check('留连地支', rowsZi[1].dz, '寅');
-check('速喜地支', rowsZi[2].dz, '辰');
-check('赤口地支', rowsZi[3].dz, '午');
-check('小吉地支', rowsZi[4].dz, '申');
-check('空亡地支', rowsZi[5].dz, '戌');
+// 排地支：自身宫（速喜）起子，隔位相排
+check('速喜(人宫)地支=子', rowsZi[2].dz, '子');
+check('大安地支', rowsZi[0].dz, '申');
+check('留连地支', rowsZi[1].dz, '戌');
+check('赤口地支', rowsZi[3].dz, '寅');
+check('小吉地支', rowsZi[4].dz, '辰');
+check('空亡地支', rowsZi[5].dz, '午');
 check('大安六神', rowsZi[0].shen, '青龙');
 check('留连六神', rowsZi[1].shen, '朱雀');
 check('速喜六神', rowsZi[2].shen, '勾陈');
@@ -123,19 +131,20 @@ check('人宫(速喜)六亲', rowsZi[2].qin, '自身');
 // ==================== 2. 午时排盘 ====================
 console.log('\n【2】午时排盘（5,6,7）');
 const rowsWu = generateJiangPai(ans567, '午');
-check('午时大安地支', rowsWu[0].dz, '午');
-check('午时留连地支', rowsWu[1].dz, '申');
-check('午时速喜地支', rowsWu[2].dz, '戌');
+check('午时速喜(人宫)地支=午', rowsWu[2].dz, '午');
+check('午时大安地支', rowsWu[0].dz, '寅');
+check('午时留连地支', rowsWu[1].dz, '辰');
+check('午时赤口地支', rowsWu[3].dz, '申');
 
 // ==================== 3. 丑时（阴支） ====================
 console.log('\n【3】丑时排盘（阴支）');
 const rowsChou = generateJiangPai(ans567, '丑');
-check('丑时大安地支', rowsChou[0].dz, '丑');
-check('丑时留连地支', rowsChou[1].dz, '卯');
-check('丑时速喜地支', rowsChou[2].dz, '巳');
-check('丑时赤口地支', rowsChou[3].dz, '未');
-check('丑时小吉地支', rowsChou[4].dz, '酉');
-check('丑时空亡地支', rowsChou[5].dz, '亥');
+check('丑时速喜(人宫)地支=丑', rowsChou[2].dz, '丑');
+check('丑时大安地支', rowsChou[0].dz, '酉');
+check('丑时留连地支', rowsChou[1].dz, '亥');
+check('丑时赤口地支', rowsChou[3].dz, '卯');
+check('丑时小吉地支', rowsChou[4].dz, '巳');
+check('丑时空亡地支', rowsChou[5].dz, '未');
 
 // ==================== 4. 六亲关系 ====================
 console.log('\n【4】六亲关系');
@@ -146,13 +155,13 @@ check('大安(自身)六亲', rowsQin[0].qin, '自身');
 check('留连六亲(水生木=子孙)', rowsQin[1].qin, '子孙');
 check('速喜六亲(土克水=官鬼)', rowsQin[2].qin, '官鬼');
 
-// 速喜为自身（火），看其他宫
+// 人宫速喜（子时落子水），看其他宫
 const ans222 = makeAnswers(2, 2, 2);
 const rowsQin2 = generateJiangPai(ans222, '子');
 check('人宫(速喜)自身', rowsQin2[2].qin, '自身');
-// 人宫速喜落辰土：子水受土克为妻财；申金由土所生为子孙。
-check('大安对速喜(土克水=妻财)', rowsQin2[0].qin, '妻财');
-check('小吉对速喜(土生金=子孙)', rowsQin2[4].qin, '子孙');
+// 人宫速喜落子水：大安申金生水为父母；小吉辰土克水为官鬼。
+check('大安对速喜(金生水=父母)', rowsQin2[0].qin, '父母');
+check('小吉对速喜(土克水=官鬼)', rowsQin2[4].qin, '官鬼');
 
 // ==================== 5. 解卦 ====================
 console.log('\n【5】解卦');
@@ -177,13 +186,25 @@ allDZ.forEach(dz => {
     checkTrue(dz + '时 大安六星非空', rows[0].xing && rows[0].xing.length > 0);
 });
 
-// ==================== 8. 六神固定映射 ====================
-console.log('\n【8】六神固定映射');
+// ==================== 8. 六神/六星 起点轮转 ====================
+console.log('\n【8】六神/六星 起点轮转');
+// 子时（起点=大安）：六神序列与大安起一致
 SHEN_NAMES.forEach((name, i) => {
     const rows = generateJiangPai(ans567, '子');
-    check(name + '六神', rows[i].shen, LIU_SHEN_NAMES[i]);
-    check(name + '六星', rows[i].xing, LIU_XING_NAMES[i]);
+    check(name + '六神(子时)', rows[i].shen, LIU_SHEN_NAMES[i]);
 });
+// 戌时（起点=小吉）：青龙起于小吉，大安为勾陈
+const rowsXu = generateJiangPai(ans567, '戌');
+check('戌时小吉六神=青龙', rowsXu[4].shen, '青龙');
+check('戌时大安六神=勾陈', rowsXu[0].shen, '勾陈');
+check('戌时速喜六神=玄武', rowsXu[2].shen, '玄武');
+// 六星：A 宫（天宫）起木星——A=大安 时序列不变；A=速喜 时轮转
+SHEN_NAMES.forEach((name, i) => {
+    const rows = generateJiangPai(ans567, '子');
+    check(name + '六星(A=大安)', rows[i].xing, LIU_XING_NAMES[i]);
+});
+check('A宫速喜→速喜=木星', rowsQin2[2].xing, '木星');
+check('A宫速喜→大安=水星', rowsQin2[0].xing, '水星');
 
 // ==================== 汇总 ====================
 const passed = checks.filter(c => c.ok).length;

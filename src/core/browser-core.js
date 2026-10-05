@@ -314,13 +314,14 @@ var XiaoliurenDomain = function(exports) {
   const YIN_DZ = ["丑", "卯", "巳", "未", "酉", "亥"];
   function generateJiangPai(answers, shiChen) {
     const renGongName = answers[2].name;
+    const renIdx = Math.max(0, SHEN_NAMES.indexOf(renGongName));
     const isYang = YANG_DZ.includes(shiChen);
     const dzList = isYang ? YANG_DZ : YIN_DZ;
-    let startIdx = dzList.indexOf(shiChen);
-    if (startIdx === -1) startIdx = 0;
+    const startIdx = Math.max(0, dzList.indexOf(shiChen));
+    // 排地支：以“自身宫（人宫）”起、落“时辰地支”，按阴/阳序列隔位相排（江氏官方“自身宫起”规则）
     const diZhiMap = {};
     for (let i = 0; i < 6; i++) {
-      diZhiMap[SHEN_NAMES[i]] = dzList[(startIdx + i) % 6];
+      diZhiMap[SHEN_NAMES[i]] = dzList[(startIdx + (i - renIdx) + 12) % 6];
     }
     const selfDz = diZhiMap[renGongName];
     const selfWx = DZ_WUXING$1[selfDz] || "";
@@ -344,13 +345,18 @@ var XiaoliurenDomain = function(exports) {
       else if (ke[wx] === selfWx) qinMap[shenName] = "官鬼";
       else qinMap[shenName] = "";
     }
+    // 排六神：按身宫（人宫）地支查六神起点表，青龙自起点宫起，顺时针轮转（江氏官方六神起点表）
+    const LIU_SHEN_START = { "子": 0, "午": 0, "丑": 1, "未": 1, "寅": 2, "申": 2, "卯": 3, "酉": 3, "辰": 4, "戌": 4, "巳": 5, "亥": 5 };
+    const shenStart = LIU_SHEN_START[shiChen] ?? 0;
     const shenMap = {};
     for (let i = 0; i < 6; i++) {
-      shenMap[SHEN_NAMES[i]] = LIU_SHEN_NAMES[i];
+      shenMap[SHEN_NAMES[i]] = LIU_SHEN_NAMES[(i - shenStart + 6) % 6];
     }
+    // 排六星：自 A 宫（第一落宫）起木星，顺时针木→火→土→金→水→天（江氏官方“自 A 宫起木星”）
+    const aIdx = Math.max(0, answers[0].index);
     const xingMap = {};
     for (let i = 0; i < 6; i++) {
-      xingMap[SHEN_NAMES[i]] = LIU_XING_NAMES[i];
+      xingMap[SHEN_NAMES[i]] = LIU_XING_NAMES[(i - aIdx + 6) % 6];
     }
     const rows = [];
     for (let i = 0; i < SHEN_NAMES.length; i++) {
@@ -376,13 +382,14 @@ var XiaoliurenDomain = function(exports) {
   }
   const DZ = ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"];
   const DZ_WUXING = ["水", "土", "木", "木", "土", "火", "火", "土", "金", "金", "土", "水"];
+  // 死六神（固定对应每一宫，宫位本体之神；权威口径：留连=腾蛇、空亡=勾陈）
   const SI_LIU_SHEN = [
     { name: "青龙", wx: "木", desc: "主喜庆、贵人、顺利、婚姻、升迁" },
-    { name: "勾陈", wx: "土", desc: "主阻滞、牵连、旧事、拖延、田宅" },
+    { name: "腾蛇", wx: "土", desc: "主虚惊、多疑、缠绕、梦魇、幻象" },
     { name: "朱雀", wx: "火", desc: "主口舌、文书、信息、诉讼、喜事" },
     { name: "白虎", wx: "金", desc: "主凶灾、血光、压力、疾病、刑伤" },
     { name: "玄武", wx: "水", desc: "主暗昧、盗贼、暧昧、小人、隐藏" },
-    { name: "腾蛇", wx: "土", desc: "主虚惊、多疑、缠绕、梦魇、幻象" }
+    { name: "勾陈", wx: "土", desc: "主阻滞、牵连、旧事、拖延、田宅" }
   ];
   const HUO_LIU_SHEN_ORDER = ["青龙", "朱雀", "勾陈", "白虎", "玄武", "腾蛇"];
   const HUO_LIU_SHEN_DESC = {
@@ -504,6 +511,9 @@ var XiaoliurenDomain = function(exports) {
     if (!rows || rows.length === 0) return "";
     const ren = rows[2];
     const startGongName = getDaoStartGongName(shiChen);
+    const shiChenIdx = DZ.indexOf(shiChen);
+    const shiChenWx = shiChenIdx >= 0 ? DZ_WUXING[shiChenIdx] : "";
+    const shiChenQin = shiChenWx ? calcQin(ren.gongWx, shiChenWx).name : "";
     return [
       "【道传·死活六神双轨合参】",
       `时辰「${shiChen}」→ 青龙起于「${startGongName}」（活六神轮值起点）。`,
@@ -512,7 +522,8 @@ var XiaoliurenDomain = function(exports) {
       `死六神「${ren.siShen}」${ren.siShenWx}（${ren.siShenDesc}）；`,
       `活六神「${ren.huoShen}」（${ren.huoShenDesc}）；`,
       `六亲为${ren.qin}（${ren.qinDesc}）。`,
-      "死神为体（事之本），活神为用（时之机），双轨合参断事理。"
+      `时辰（用）「${shiChen}」五行${shiChenWx}，与人宫（体）关系：${shiChenQin}。`,
+      "体用：人宫为体（所问之事），时辰为用（外缘之变）；死六神定宫位本体之神、活六神按时轮值观机变，双轨合参断事理。"
     ].join("");
   }
   exports.calculate = calculate;

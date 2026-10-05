@@ -10,11 +10,11 @@ const DAO_DZ_WUXING = ['水', '土', '木', '木', '土', '火', '火', '土', '
 
 const DAO_SI_LIU_SHEN = [
     { name: '青龙', wx: '木', desc: '主喜庆、贵人、顺利、婚姻、升迁' },
-    { name: '勾陈', wx: '土', desc: '主阻滞、牵连、旧事、拖延、田宅' },
+    { name: '腾蛇', wx: '土', desc: '主虚惊、多疑、缠绕、梦魇、幻象' },
     { name: '朱雀', wx: '火', desc: '主口舌、文书、信息、诉讼、喜事' },
     { name: '白虎', wx: '金', desc: '主凶灾、血光、压力、疾病、刑伤' },
     { name: '玄武', wx: '水', desc: '主暗昧、盗贼、暧昧、小人、隐藏' },
-    { name: '腾蛇', wx: '土', desc: '主虚惊、多疑、缠绕、梦魇、幻象' }
+    { name: '勾陈', wx: '土', desc: '主阻滞、牵连、旧事、拖延、田宅' }
 ];
 
 const DAO_HUO_LIU_SHEN_ORDER = ['青龙', '朱雀', '勾陈', '白虎', '玄武', '腾蛇'];
@@ -82,6 +82,9 @@ function generateDaoJieGuaText(rows, shiChen) {
     const ren = rows[2];
     const startGongIdx = DAO_HUO_SHEN_START_GONG[shiChen] != null ? DAO_HUO_SHEN_START_GONG[shiChen] : 0;
     const startGongName = ['大安', '留连', '速喜', '赤口', '小吉', '空亡'][startGongIdx];
+    const shiChenIdx = DAO_DZ.indexOf(shiChen);
+    const shiChenWx = shiChenIdx >= 0 ? DAO_DZ_WUXING[shiChenIdx] : '';
+    const shiChenQin = shiChenWx ? daoCalcQin(ren.gongWx, shiChenWx).name : '';
     return [
         '【道传·死活六神双轨合参】',
         '时辰「' + shiChen + '」→ 青龙起于「' + startGongName + '」（活六神轮值起点）。',
@@ -90,7 +93,8 @@ function generateDaoJieGuaText(rows, shiChen) {
         '死六神「' + ren.siShen + '」' + ren.siShenWx + '（' + ren.siShenDesc + '）；',
         '活六神「' + ren.huoShen + '」（' + ren.huoShenDesc + '）；',
         '六亲为' + ren.qin + '（' + ren.qinDesc + '）。',
-        '死神为体（事之本），活神为用（时之机），双轨合参断事理。'
+        '时辰（用）「' + shiChen + '」五行' + shiChenWx + '，与人宫（体）关系：' + shiChenQin + '。',
+        '体用：人宫为体（所问之事），时辰为用（外缘之变）；死六神定宫位本体之神、活六神按时轮值观机变，双轨合参断事理。'
     ].join('');
 }
 
@@ -148,6 +152,8 @@ for (let i = 0; i < 6; i++) {
     const rows = generateDaoPai(ans, '子');
     check('宫' + i + ' 死六神', rows[2].siShen, DAO_SI_LIU_SHEN[i].name);
 }
+check('留连死六神=腾蛇（权威口径）', DAO_SI_LIU_SHEN[1].name, '腾蛇');
+check('空亡死六神=勾陈（权威口径）', DAO_SI_LIU_SHEN[5].name, '勾陈');
 
 // ==================== 5. 活六神时辰轮转 ====================
 console.log('\n【5】活六神时辰轮转');
@@ -177,6 +183,8 @@ checkTrue('解卦含时辰', jieText.includes('子'));
 checkTrue('解卦含人宫', jieText.includes('速喜'));
 checkTrue('解卦含死六神', jieText.includes('朱雀'));
 checkTrue('解卦含活六神', jieText.includes('青龙'));
+checkTrue('解卦含体用（人宫为体/时辰为用）', jieText.includes('人宫为体') && jieText.includes('时辰为用'));
+checkTrue('解卦含时辰（用）六亲行', jieText.includes('时辰（用）'));
 
 // ==================== 8. 解卦边界 ====================
 console.log('\n【8】解卦边界');

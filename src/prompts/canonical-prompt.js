@@ -76,10 +76,11 @@
       const human = rows[2] || {};
       const interpretation = adapters.generateDaoInterpretation?.(rows, context.shiChen) || '—';
       return commonHeader('道传排盘', context)
-        + `\n【人宫信息】\n- 五行：${human.gongWx || '—'}\n- 死六神：${human.siShen || '—'}\n- 活六神：${human.huoShen || '—'}\n- 六亲：${human.qin || '—'}\n`
+        + `\n【人宫信息（体）】\n- 五行：${human.gongWx || '—'}\n- 死六神：${human.siShen || '—'}\n- 活六神：${human.huoShen || '—'}\n- 六亲：${human.qin || '—'}\n- 时辰（用）：${context.shiChen}时\n`
         + `\n【道传三宫】\n${formatRows(rows, [['位置', 'position'], ['宫位', 'gong'], ['地支', 'dz'], ['死六神', 'siShen'], ['活六神', 'huoShen'], ['六亲', 'qin']])}\n`
         + `\n【基础解卦】\n${interpretation}\n`
-        + commonRequest('死活六神、六亲及天地人三宫的合参');
+        + `\n【道传解读框架】\n1. 体用：人宫为体（所问之事），时辰为用（外缘之变）——先判体用生克，再论死活六神。\n2. 三宫：天宫主天时/起因，地宫主地利/过程，人宫主人和/结果。\n3. 参考六步解卦法：初判吉凶（体用）→ 明确定位（用神）→ 细析三宫 → 活用类象 → 按需技法（转太极/六亲）→ 综合判断与建议。\n`
+        + commonRequest('人宫（体）与时辰（用）的体用关系、死活六神、六亲及天地人三宫的合参');
     }
 
     return commonHeader('古法排盘', context)

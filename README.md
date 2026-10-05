@@ -49,7 +49,7 @@ npm ci                  # 安装依赖（Vite，仅开发/构建用）
 npm run dev             # 本地开发（Vite HMR）
 npm run check           # 语法检查（12 个模块）
 npm run check:docs      # 文档链接检查
-npm run test:all        # 5 个核心测试脚本（579 项断言，口径见 docs/版本说明.md）
+npm run test:all        # 5 个核心测试脚本（589 项断言，口径见 docs/版本说明.md）
 npm run test:compat     # V2.2 ↔ V3.0 数据兼容（144 用例）
 npm run build           # 构建 dist/index.html（明码单文件）
 npm run build:protected # 构建 release/index.html（混淆保护版）

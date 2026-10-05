@@ -368,16 +368,16 @@
             // ===== 江氏排盘核心 =====
             function generateJiangPai(answers, shiChenDz) {
                 const renGongName = answers[2].shen.name;
-                const renIdx = SHEN_NAMES.indexOf(renGongName);
+                const renIdx = Math.max(0, SHEN_NAMES.indexOf(renGongName));
 
                 const isYang = YANG_DZ.includes(shiChenDz);
                 const dzList = isYang ? YANG_DZ : YIN_DZ;
-                let startIdx = dzList.indexOf(shiChenDz);
-                if (startIdx === -1) startIdx = 0;
+                const startIdx = Math.max(0, dzList.indexOf(shiChenDz));
+                // 排地支：以“自身宫（人宫）”起、落“时辰地支”，按阴/阳序列隔位相排（江氏官方“自身宫起”规则）
                 let diZhiMap = {};
                 for (let i = 0; i < 6; i++) {
                     let shenName = SHEN_NAMES[i];
-                    diZhiMap[shenName] = dzList[(startIdx + i) % 6];
+                    diZhiMap[shenName] = dzList[(startIdx + (i - renIdx) + 12) % 6];
                 }
 
                 const selfDz = diZhiMap[renGongName];
@@ -397,15 +397,20 @@
                     else qinMap[shenName] = '';
                 }
 
+                // 排六神：按身宫（人宫）地支查六神起点表，青龙自起点宫起，顺时针轮转（江氏官方六神起点表）
+                const LIU_SHEN_START = { '子': 0, '午': 0, '丑': 1, '未': 1, '寅': 2, '申': 2, '卯': 3, '酉': 3, '辰': 4, '戌': 4, '巳': 5, '亥': 5 };
+                const shenStart = LIU_SHEN_START[shiChenDz] != null ? LIU_SHEN_START[shiChenDz] : 0;
                 let shenMap = {};
                 for (let i = 0; i < 6; i++) {
-                    shenMap[SHEN_NAMES[i]] = LIU_SHEN_NAMES[i];
+                    shenMap[SHEN_NAMES[i]] = LIU_SHEN_NAMES[(i - shenStart + 6) % 6];
                 }
 
+                // 排六星：自 A 宫（第一落宫）起木星，顺时针木→火→土→金→水→天（江氏官方“自 A 宫起木星”）
+                const aIdx = Math.max(0, answers[0].shen.index);
                 let xingMap = {};
                 for (let i = 0; i < 6; i++) {
                     let shenName = SHEN_NAMES[i];
-                    xingMap[shenName] = LIU_XING_NAMES[i];
+                    xingMap[shenName] = LIU_XING_NAMES[(i - aIdx + 6) % 6];
                 }
 
                 let result = [];
@@ -441,9 +446,13 @@
             // ===== 排盘详情弹窗 =====
             function showPaiPanDetail(answers, shiChenDz, jiangData) {
                 const renGongName = answers[2].shen.name;
+                const renIdx = Math.max(0, SHEN_NAMES.indexOf(renGongName));
                 const isYang = YANG_DZ.includes(shiChenDz);
                 const dzList = isYang ? YANG_DZ : YIN_DZ;
-                let startIdx = dzList.indexOf(shiChenDz);
+                const startIdx = Math.max(0, dzList.indexOf(shiChenDz));
+                const LIU_SHEN_START = { '子': 0, '午': 0, '丑': 1, '未': 1, '寅': 2, '申': 2, '卯': 3, '酉': 3, '辰': 4, '戌': 4, '巳': 5, '亥': 5 };
+                const shenStart = LIU_SHEN_START[shiChenDz] != null ? LIU_SHEN_START[shiChenDz] : 0;
+                const aIdx = Math.max(0, answers[0].shen.index);
                 const selfItem = jiangData.find(d => d.gong === renGongName) || {};
                 const selfDz = selfItem.dz || '';
                 const selfWx = DZ_WUXING[selfDz];
@@ -452,11 +461,11 @@
 
                 let html = '<div style="font-size:13px;line-height:1.85;color:#3d3226;">';
 
-                html += '<div style="margin-bottom:8px;font-size:14px;"><b>⏰ 时辰</b>：' + shiChenDz + '时 → ' + (isYang ? '阳支' : '阴支') + '序列 [' + dzList.join('、') + ']，从 <b>' + dzList[startIdx] + '</b>（第' + (startIdx + 1) + '位）开始</div>';
+                html += '<div style="margin-bottom:8px;font-size:14px;"><b>⏰ 时辰</b>：' + shiChenDz + '时 → ' + (isYang ? '阳支' : '阴支') + '序列 [' + dzList.join('、') + ']，以身宫（人宫「' + escapeHtml(renGongName) + '」）起 <b>' + dzList[startIdx] + '</b>（第' + (startIdx + 1) + '位），隔位相排</div>';
 
-                html += '<div style="margin-bottom:6px;color:#c8a84e;font-weight:600;">▎地支排法（从大安起，依次分配）</div>';
+                html += '<div style="margin-bottom:6px;color:#c8a84e;font-weight:600;">▎地支排法（自身宫起，隔位相排）</div>';
                 for (let i = 0; i < 6; i++) {
-                    html += '<div style="margin-left:13px;">' + SHEN_NAMES[i] + ' ← ' + dzList[(startIdx + i) % 6] + '</div>';
+                    html += '<div style="margin-left:13px;">' + SHEN_NAMES[i] + ' ← ' + dzList[(startIdx + (i - renIdx) + 12) % 6] + '</div>';
                 }
 
                 html += '<div style="margin-top:8px;margin-bottom:4px;color:#c8a84e;font-weight:600;">▎六亲排法（人宫「' + escapeHtml(renGongName) + '」地支' + selfDz + '→五行"' + selfWx + '"为自身）</div>';
@@ -475,14 +484,14 @@
                     }
                 });
 
-                html += '<div style="margin-top:8px;margin-bottom:4px;color:#c8a84e;font-weight:600;">▎六神排法（固定映射，从大安起）</div>';
+                html += '<div style="margin-top:8px;margin-bottom:4px;color:#c8a84e;font-weight:600;">▎六神排法（按身宫地支起点轮转，青龙起于「' + SHEN_NAMES[shenStart] + '」）</div>';
                 for (let i = 0; i < 6; i++) {
-                    html += '<div style="margin-left:13px;">' + SHEN_NAMES[i] + ' → ' + LIU_SHEN_NAMES[i] + '</div>';
+                    html += '<div style="margin-left:13px;">' + SHEN_NAMES[i] + ' → ' + LIU_SHEN_NAMES[(i - shenStart + 6) % 6] + '</div>';
                 }
 
-                html += '<div style="margin-top:8px;margin-bottom:4px;color:#c8a84e;font-weight:600;">▎六星排法（固定映射，从大安起）</div>';
+                html += '<div style="margin-top:8px;margin-bottom:4px;color:#c8a84e;font-weight:600;">▎六星排法（自天宫（A 宫）「' + SHEN_NAMES[aIdx] + '」起木星，顺时针轮转）</div>';
                 for (let i = 0; i < 6; i++) {
-                    html += '<div style="margin-left:13px;">' + SHEN_NAMES[i] + ' → ' + LIU_XING_NAMES[i] + '</div>';
+                    html += '<div style="margin-left:13px;">' + SHEN_NAMES[i] + ' → ' + LIU_XING_NAMES[(i - aIdx + 6) % 6] + '</div>';
                 }
 
                 html += '</div>';
@@ -564,15 +573,15 @@
             var DAO_DZ = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
             var DAO_DZ_WUXING = ['水', '土', '木', '木', '土', '火', '火', '土', '金', '金', '土', '水'];
 
-            // 死六神（固定对应每一宫，六宫本体之神）
+            // 死六神（固定对应每一宫，宫位本体之神；权威口径：留连=腾蛇、空亡=勾陈）
             // 0=大安,1=留连,2=速喜,3=赤口,4=小吉,5=空亡
             var DAO_SI_LIU_SHEN = [
                 { name: '青龙', wx: '木', desc: '主喜庆、贵人、顺利、婚姻、升迁' },
-                { name: '勾陈', wx: '土', desc: '主阻滞、牵连、旧事、拖延、田宅' },
+                { name: '腾蛇', wx: '土', desc: '主虚惊、多疑、缠绕、梦魇、幻象' },
                 { name: '朱雀', wx: '火', desc: '主口舌、文书、信息、诉讼、喜事' },
                 { name: '白虎', wx: '金', desc: '主凶灾、血光、压力、疾病、刑伤' },
                 { name: '玄武', wx: '水', desc: '主暗昧、盗贼、暧昧、小人、隐藏' },
-                { name: '腾蛇', wx: '土', desc: '主虚惊、多疑、缠绕、梦魇、幻象' }
+                { name: '勾陈', wx: '土', desc: '主阻滞、牵连、旧事、拖延、田宅' }
             ];
 
             // 活六神顺序（永远固定）
@@ -673,6 +682,9 @@
                 var ren = rows[2];
                 var startGongIdx = DAO_HUO_SHEN_START_GONG[shiChen] != null ? DAO_HUO_SHEN_START_GONG[shiChen] : 0;
                 var startGongName = ['大安', '留连', '速喜', '赤口', '小吉', '空亡'][startGongIdx];
+                var shiChenIdx = DAO_DZ.indexOf(shiChen);
+                var shiChenWx = shiChenIdx >= 0 ? DAO_DZ_WUXING[shiChenIdx] : '';
+                var shiChenQin = shiChenWx ? daoCalcQin(ren.gongWx, shiChenWx).name : '';
                 return [
                     '【道传·死活六神双轨合参】',
                     '时辰「' + shiChen + '」→ 青龙起于「' + startGongName + '」（活六神轮值起点）。',
@@ -681,7 +693,8 @@
                     '死六神「' + ren.siShen + '」' + ren.siShenWx + '（' + ren.siShenDesc + '）；',
                     '活六神「' + ren.huoShen + '」（' + ren.huoShenDesc + '）；',
                     '六亲为' + ren.qin + '（' + ren.qinDesc + '）。',
-                    '死神为体（事之本），活神为用（时之机），双轨合参断事理。'
+                    '时辰（用）「' + shiChen + '」五行' + shiChenWx + '，与人宫（体）关系：' + shiChenQin + '。',
+                    '体用：人宫为体（所问之事），时辰为用（外缘之变）；死六神定宫位本体之神、活六神按时轮值观机变，双轨合参断事理。'
                 ].join('');
             }
 
@@ -753,7 +766,7 @@
 
                 // 合参说明
                 html += '<div style="margin-top:10px;padding:8px 12px;background:#f3e5f5;border-radius:8px;color:#5d3a82;font-size:12px;">';
-                html += '<b>💀 死六神</b> = 事之体（本性固定不变）；<b>🔄 活六神</b> = 时之用（随时辰轮转）。两者合参，体用兼察，方断事理。';
+                html += '<b>体用</b>：人宫为体（所问之事），时辰为用（外缘之变）；<b>💀 死六神</b>定宫位本体之神（固定不变），<b>🔄 活六神</b>按时轮值观机变。死活合参、体用兼察，方断事理。';
                 html += '</div>';
 
                 html += '</div>';
